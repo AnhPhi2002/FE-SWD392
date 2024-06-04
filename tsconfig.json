@@ -26,6 +26,6 @@
       ]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/assets/icons/Iconography/SearchIcon.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
