@@ -8,6 +8,7 @@ import {
 import Header from './components/share/header';
 import Home from './pages/home';
 import About from './pages/about';
+import Footer from './components/share/footer';
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
             <Route path="/about" element={<About />} />
           </Routes>
     
-        </div>  
+        </div>
+        <Footer/>  
       </div>
     </Router>
   );
