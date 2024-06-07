@@ -1,22 +1,29 @@
-import Iconography from "./components/icons/Iconography"
-import SocialIcons from "./components/icons/SocialIcons"
-import { Button } from "./components/ui/button"
-
-
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Outlet
+} from 'react-router-dom';
+import Header from './components/share/header';
+import Home from './pages/home';
+import About from './pages/about';
 
 function App() {
-  
-
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <Button>Click me</Button>
-   
-    <Iconography  icon="add-to-cart"/>
-    </>
-  )
+    <Router>
+      <div>
+        <Header />
+        <div>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+    
+        </div>  
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
