@@ -1,31 +1,21 @@
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Outlet
-} from 'react-router-dom';
-import Header from './components/share/header';
-import Home from './pages/home';
-import About from './pages/about';
-import Footer from './components/share/footer';
-import Cart from './pages/cart';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Login from "./pages/login";
+import Profile from "./pages/profile";
+import Layout from "./layout";
 
 function App() {
   return (
     <Router>
-      <div>
-        <Header />
-        <div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-    
-        </div>
-        <Footer/>  
-      </div>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </Router>
   );
 }
