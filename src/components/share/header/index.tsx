@@ -1,8 +1,28 @@
 import { AvatarLogo } from "./Avatar";
 import { InputMenu } from "./InputMenu";
 import { Menu } from "./Menu";
-import Unigate from "./unigate";
+import { SheetCart } from "./SheetCart";
 import UserNav from "./user-nav";
+
+// Define the cart items
+const cartItems = [
+  {
+    id: 1,
+    name: 'Raw Black T-Shirt Lineup',
+    size: 'M',
+    price: 75.00,
+    quantity: 1,
+    imageUrl: '',
+  },
+  {
+    id: 2,
+    name: 'Essential Neutrals',
+    size: 'S',
+    price: 22.00,
+    quantity: 1,
+    imageUrl: '',
+  },
+];
 
 export default function Header() {
   return (
@@ -15,7 +35,7 @@ export default function Header() {
       </div>
       <div className="flex gap-4 items-center">
         <InputMenu />
-        <Unigate />
+        <SheetCart items={cartItems} />
         <UserNav />
       </div>
     </header>

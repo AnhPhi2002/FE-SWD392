@@ -8,7 +8,7 @@ import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 export default function UserNav() {
 
   return (
-    <div>
+    <div className='pl-5'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center space-x-4 cursor-pointer">

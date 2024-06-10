@@ -7,7 +7,7 @@ import ProductList from "./components/ProductList";
 export default function HomePage() {
   return (
     <>
-      <section className="pl-40 pr-40 bg-gray-100 ">
+      <section className="pl-40 pr-40 bg-gray-100 w-full">
         <Hero />
       </section>
       <section className="pl-40 pr-40">
