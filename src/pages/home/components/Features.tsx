@@ -13,19 +13,19 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   description,
 }) => {
   return (
-    <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-lg ">
+    <div className="flex flex-col p-4  rounded-lg shadow-lg ">
       <div className="flex items-center justify-center w-12 h-12 mb-4 bg-gray-100 rounded-full">
         {icon}
       </div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600 text-center">{description}</p>
+      <p className="text-gray-600 ">{description}</p>
     </div>
   );
 };
 
 const Features: React.FC = () => {
   return (
-    <div className="flex  px-10 py-20  pt-40">
+    <div className="flex justify-center px-10 py-20  pt-40">
       <FeatureCard
         icon={<Iconography icon="search" />}
         title="Free Shipping"

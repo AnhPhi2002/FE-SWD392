@@ -10,7 +10,8 @@ const SidebarItem = ({ name, icon, active, ...props }: SidebarItemProps) => {
       className={`flex gap-4 items-center px-6 rounded-lg py-4 cursor-pointer ${
         active ? "bg-[#f6f6f6] text-black" : "text-gray-500"
       }`}
-      {...props}>
+      {...props}
+    >
       {icon}
       <h2 className="text-xl font-semibold">{name}</h2>
     </div>
