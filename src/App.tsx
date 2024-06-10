@@ -1,29 +1,39 @@
-import React from 'react';
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Outlet
-} from 'react-router-dom';
-import Header from './components/share/header';
-import Home from './pages/home';
-import About from './pages/about';
-import Footer from './components/share/footer';
+  Outlet,
+} from "react-router-dom";
+import Header from "./components/share/header";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Footer from "./components/share/footer";
+import Login from "./pages/login";
+import Profile from "./pages/profile";
 
 function App() {
+  const isLogin = true;
   return (
     <Router>
-      <div>
-        <Header />
+      {isLogin && (
         <div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-    
+          <Header />
+          <div>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer/>  
-      </div>
+      )}
+      {!isLogin && (
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      )}
     </Router>
   );
 }
