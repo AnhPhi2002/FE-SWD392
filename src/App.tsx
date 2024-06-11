@@ -5,7 +5,8 @@ import Login from "./pages/login";
 import Profile from "./pages/profile";
 import Layout from "./layout";
 import ProductDetail from "./pages/product-detail";
-
+import CategoriesSidebar from "./pages/product-list/components/categories";
+import ProductListings from "./pages/product-list";
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product-detail" element={<ProductDetail />} />
+          <Route path="/product-listing" element={<ProductListings />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

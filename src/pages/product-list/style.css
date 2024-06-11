@@ -1,0 +1,38 @@
+/* Add this CSS to your main CSS file or within a <style> tag in your HTML file */
+.sidebar-container {
+    width: 250px; /* Fixed width */
+    padding: 20px;
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    margin: 20px; /* Optional margin for better spacing */
+}
+
+.sidebar-title {
+    margin-bottom: 20px; /* Space below the title */
+    font-size: 18px; /* Larger, readable text */
+    font-weight: bold; /* Bold font for title */
+    color: #333; /* Dark gray color for better readability */
+}
+
+.sidebar-list {
+    list-style: none; /* Remove default list styling */
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-item {
+    margin-bottom: 10px; /* Space between items */
+    font-size: 16px; /* Readable text size */
+}
+
+.sidebar-checkbox {
+    margin-right: 10px; /* Space between checkbox and label text */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Label styling to enhance readability and interactivity */
+.sidebar-label {
+    cursor: pointer;
+    user-select: none; /* Prevent text selection */
+}
