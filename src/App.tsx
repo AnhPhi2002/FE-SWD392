@@ -6,15 +6,26 @@ import Profile from "./pages/profile";
 import Layout from "./layout";
 import ProductDetail from "./pages/product-detail";
 
+import ProductListings from "./pages/product-list";
+import Cart from "./pages/cart";
+
 function App() {
+  // const elements = useRoutes ([
+  //   {
+  //     path: '/',
+  //     element: <Home
+  //   }
+  // ])
   return (
     <Router>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product-detail" element={<ProductDetail />} />
+          <Route path="/product-listing" element={<ProductListings />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
