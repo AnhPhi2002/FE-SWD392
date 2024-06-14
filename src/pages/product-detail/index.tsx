@@ -6,7 +6,7 @@ import Similar from "./components/Similar";
 export default function ProductDetail() {
   return (
     <>
-      <section className="pl-40 pr-40 bg- ">
+      <section className="pl-40 pr-40 mt-10 ">
         <Breadcrumb />
       </section>
       <section className="pl-40 pr-40 bg-gray-100 ">
