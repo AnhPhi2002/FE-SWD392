@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { getProductDetail, review, getReviews } from '@/lib/api/productdetail-api';
 import axios from 'axios';
 
-const API_URL = 'https://666833fdf53957909ff70469.mockapi.io/api/product-detail/review';
-
 interface Review {
-  id: string;
-  name: string;
-  review: string;
+  review_id: number;
+  product_id: number;
   rating: number;
+  comment: string;
+  user_id: number;
+  full_name?: string;
+}
+
+interface User {
+  user_id: number;
+  full_name: string;
 }
 
 const Tabs: React.FC = () => {
@@ -15,19 +21,48 @@ const Tabs: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
-  const [reviewerName, setReviewerName] = useState('');
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [productDetail, setProductDetail] = useState({ description: '' });
+  const productId = 12;
 
   useEffect(() => {
+    fetchProductDetails();
     fetchReviews();
+    fetchUsers();
   }, []);
+
+  const fetchProductDetails = async () => {
+    try {
+      const response = await getProductDetail(productId);
+      setProductDetail(response.data);
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+  };
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get<Review[]>(API_URL);
-      setReviews(response.data);
+      const response = await getReviews(productId);
+      const reviewsWithFullName = response.data.map((review: Review) => {
+        const user = users.find((user) => user.user_id === review.user_id);
+        return {
+          ...review,
+          full_name: user ? user.full_name : 'Vô danh'
+        };
+      });
+      setReviews(reviewsWithFullName);
     } catch (error) {
       console.error('Error fetching reviews:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/users/all');
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
     }
   };
 
@@ -39,19 +74,21 @@ const Tabs: React.FC = () => {
     setShowModal(!showModal);
     setRating(0);
     setReviewText('');
-    setReviewerName('');
   };
 
   const submitReview = async () => {
+    const userId = localStorage.getItem('userId'); // Lấy user_id từ localStorage
     const newReview = {
-      name: reviewerName,
-      review: reviewText,
-      rating: rating
+      product_id: productId,
+      rating: rating,
+      comment: reviewText,
+      user_id: parseInt(userId || '0') // Đảm bảo user_id là số
     };
 
     try {
-      const response = await axios.post<Review>(API_URL, newReview);
-      setReviews([...reviews, response.data]);
+      const response = await review(newReview);
+      const user = users.find((user) => user.user_id === response.data.user_id);
+      setReviews([...reviews, { ...response.data, full_name: user ? user.full_name : 'Vô danh' }]);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -86,14 +123,15 @@ const Tabs: React.FC = () => {
             )}
           </div>
           <div className="overflow-auto max-h-96">
-            {activeTab === 'detail' ? (
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus ut perspiciatis ipsa dolores obcaecati animi facilis sint numquam odit libero sunt mollitia incidunt illo, ratione vero deleniti labore error architecto veniam saepe, aperiam repudiandae ex voluptates? Culpa odio dolores soluta recusandae earum, iusto quas ab! Consequatur libero dolore fugit sit dolorum deleniti modi sapiente obcaecati itaque! Hic nisi qui quaerat eligendi! Quas in, architecto totam sequi ut placeat impedit ab voluptatum, veniam sapiente rerum molestiae ear</p>
-            ) : (
+            {activeTab === 'detail' && (
+              <p>{productDetail.description}</p>
+            )}
+            {activeTab === 'review' && (
               <div className="space-y-4 mt-4">
                 {reviews.map((review) => (
-                  <div key={review.id} className="bg-gray-100 rounded-lg p-4">
-                    <h4 className="font-bold">{review.name}</h4>
-                    <p className="text-gray-600">{review.review}</p>
+                  <div key={review.review_id} className="bg-gray-100 rounded-lg p-4">
+                    <h4 className="font-bold">{review.full_name || 'Vô danh'}</h4>
+                    <p className="text-gray-600">{review.comment}</p>
                     <div className="stars">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <i key={star} className={`fa-star ${review.rating >= star ? 'fas text-yellow-500' : 'far text-gray-300'}`}></i>
@@ -113,14 +151,6 @@ const Tabs: React.FC = () => {
           <div className="overlay absolute inset-0 bg-black bg-opacity-50" onClick={toggleModal}></div>
           <div className="modal bg-white rounded-lg p-6 z-10">
             <h2 className="text-xl font-bold mb-4">Write review</h2>
-            <input
-              type="text"
-              id="name"
-              placeholder="Your name"
-              value={reviewerName}
-              onChange={(e) => setReviewerName(e.target.value)}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-md"
-            />
             <textarea
               id="review"
               placeholder="Write your review"
