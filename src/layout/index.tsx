@@ -1,13 +1,19 @@
 import Footer from "@/components/share/footer";
 import Header from "@/components/share/header";
-import { Outlet } from "react-router-dom";
 
-const Layout = () => {
+
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
-      <Outlet />
-      <Footer />
+    <div> 
+    <Header />
+    </div>
+    <div> 
+    {children}
+    </div>
+    <div> 
+    <Footer />
+    </div>    
     </>
   );
 };
