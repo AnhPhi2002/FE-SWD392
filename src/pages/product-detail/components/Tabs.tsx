@@ -8,7 +8,7 @@ interface Review {
   rating: number;
   comment: string;
   user_id: number;
-  full_name?: string; // Add full_name to the interface
+  full_name?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,14 +18,13 @@ interface User {
   full_name: string;
 }
 
-const Tabs: React.FC = () => {
+const Tabs: React.FC<{ productId: number }> = ({ productId }) => {
   const [activeTab, setActiveTab] = useState('detail');
   const [showModal, setShowModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [productDetail, setProductDetail] = useState({ description: '' });
-  const productId = 12;
 
   useEffect(() => {
     if (activeTab === 'review') {
@@ -35,7 +34,7 @@ const Tabs: React.FC = () => {
 
   useEffect(() => {
     fetchProductDetails();
-  }, []);
+  }, [productId]);
 
   const fetchProductDetails = async () => {
     try {
@@ -133,7 +132,6 @@ const Tabs: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="overlay absolute inset-0 bg-black bg-opacity-50" onClick={toggleModal}></div>

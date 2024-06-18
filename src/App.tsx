@@ -6,7 +6,6 @@ import Profile from './pages/profile';
 import Layout from './layout';
 import ProductDetail from './pages/product-detail';
 import { Toaster } from 'sonner';
-
 import ProductListings from './pages/product-list';
 import Cart from './pages/cart';
 
@@ -25,7 +24,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/product-detail" element={<ProductDetail />} />
+          <Route path="/product-detail/:productId" element={<ProductDetail />} />
           <Route path="/product-listing" element={<ProductListings />} />
         </Route>
         <Route path="/login" element={<Login />} />

@@ -1,62 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Define the props type if needed, here we don't have props to pass
-type CategoriesSidebarProps = {};
-
-const CategoriesSidebar: React.FC<CategoriesSidebarProps> = () => {
-    const categories = [
-        "Perfume",
-        "Trousers",
-        "Shoe",
-        "Handbag",
-        "Hat",
-        "Thermos"
-    ];
-
-    return (
-        <div style={sidebarStyle}>
-            <h3 style={titleStyle}>Categories</h3>
-            <ul style={listStyle}>
-                {categories.map((category, index) => (
-                    <li key={index} style={listItemStyle}>
-                        <label>
-                            <input type="checkbox" style={checkboxStyle} />
-                            {category}
-                        </label>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+type Category = {
+  category_id: number;
+  name: string;
 };
 
-// You can adjust the styling directly in your component or through CSS classes
-const sidebarStyle = {
-    padding: '20px',
-    width: '250px',
-    background: '#FFFFFF',
-    boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px'
+type CategoriesSidebarProps = {
+  selectedCategoryIds: number[];
+  setSelectedCategoryIds: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const titleStyle = {
-    marginBottom: '16px',
-    fontSize: '16px',
-    fontWeight: 'bold'
-};
+const CategoriesSidebar: React.FC<CategoriesSidebarProps> = ({ selectedCategoryIds, setSelectedCategoryIds }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
 
-const listStyle = {
-    listStyle: 'none',
-    padding: 0
-};
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
 
-const listItemStyle = {
-    marginBottom: '12px',
-    fontSize: '14px'
-};
+    fetchCategories();
+  }, []);
 
-const checkboxStyle = {
-    marginRight: '8px'
+  const handleCheckboxChange = (categoryId: number) => {
+    if (selectedCategoryIds.includes(categoryId)) {
+      setSelectedCategoryIds(selectedCategoryIds.filter(id => id !== categoryId));
+    } else {
+      setSelectedCategoryIds([...selectedCategoryIds, categoryId]);
+    }
+  };
+
+  return (
+    <div className="p-5 w-64 bg-white shadow rounded-lg mt-10">
+      <h3 className="mb-4 text-lg font-bold">Categories</h3>
+      <ul className="list-none p-0">
+        {categories.map((category) => (
+          <li key={category.category_id} className="mb-3 text-sm">
+            <label className="flex items-center">
+              <input 
+                type="checkbox" 
+                className="mr-2" 
+                checked={selectedCategoryIds.includes(category.category_id)}
+                onChange={() => handleCheckboxChange(category.category_id)}
+              />
+              {category.name}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default CategoriesSidebar;
