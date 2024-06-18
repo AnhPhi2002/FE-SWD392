@@ -8,7 +8,7 @@ const Product: React.FC = () => {
         weight: '',
         placeOfProduction: '',
         price: 0,
-        quantity: 1, // Giả định ban đầu mỗi sản phẩm có số lượng là 1
+        quantity: 1,
     });
     const [currentIndex, setCurrentIndex] = useState(0);
 

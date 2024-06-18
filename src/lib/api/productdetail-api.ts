@@ -16,5 +16,5 @@ export function review(values: {
 
 // Hàm để lấy danh sách đánh giá theo product_id
 export function getReviews(product_id: number) {
-    return axiosClient.get(`http://localhost:5000/api/reviews?product_id=${product_id}`);
+    return axiosClient.get(`http://localhost:5000/api/reviews/${product_id}`);
 }
