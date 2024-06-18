@@ -2,37 +2,34 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { loginSchema } from '@/schema/auth';
-import { authAPI } from '@/lib/api/auth-api';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-const Login = () => {
-  const navigate = useNavigate();
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+import { Link } from 'react-router-dom';
+import { registerSchema } from '@/schema/auth';
+import { toast } from 'sonner';
+import { authAPI } from '@/lib/api/auth-api';
+function Register() {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
+      phone: ''
     }
   });
-
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
-      const res = await authAPI.login(values);
-      localStorage.setItem('accessToken', res.data.token);
-      toast.success('Login successfully');
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
+      const resData = await authAPI.register(values);
+      if (resData.data) {
+        form.reset();
+        toast.success('Register success');
+      }
     } catch (error: any) {
-      toast.error(error);
+      toast.error(error.response.data.message);
     }
   }
-
   return (
     <>
-      <h1 className="text-2xl text-black font-bold h-[20vh] flex justify-center items-center">Login</h1>
+      <h1 className="text-2xl text-black font-bold h-[20vh] flex justify-center items-center">Register</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-8">
@@ -62,22 +59,30 @@ const Login = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} className="active:outline-none focus-visible:ring-0" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div className="text-right mt-4">
-            <Link to="forget-password" className="text-sm font-medium text-gray-600">
-              Forgot Password?
-            </Link>
-          </div>
-          <button className="bg-black text-white mt-4 w-full py-2">Login</button>
+          <button className="bg-black text-white mt-4 w-full py-2">Register</button>
         </form>
         <div className="mt-4 text-center">
-          <Link to="register" className="text-sm  font-medium text-gray-600">
-            Don't have an account? Sign up
+          <Link to="../" className="text-sm  font-medium text-gray-600">
+            Already have an account? Log in
           </Link>
         </div>
       </Form>
     </>
   );
-};
+}
 
-export default Login;
+export default Register;

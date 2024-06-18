@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Input from "@/pages/login/components/Input";
-import Button from "../Button";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Button from '../Button';
+import { Input } from '@/components/ui/input';
 const AccountDetail = () => {
   return (
     <>
@@ -8,8 +8,8 @@ const AccountDetail = () => {
         <AvatarImage src="https://github.com/shadcn.png" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-      <Input label="Full Name" id="full-name" />
-      <Input label="Email" id="email" />
+      <Input />
+      <Input />
       <Button>Save Changes</Button>
     </>
   );
