@@ -17,6 +17,9 @@ type ProductListProps = {
 
 const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortCriteria, setSortCriteria] = useState<string>('default');
+  const productsPerPage = 6;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +39,16 @@ const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
     ? products.filter(product => selectedCategoryIds.includes(product.category_id))
     : products;
 
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortCriteria === 'priceAsc') {
+      return a.price - b.price;
+    } else if (sortCriteria === 'priceDesc') {
+      return b.price - a.price;
+    } else {
+      return 0;
+    }
+  });
+
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'available':
@@ -53,10 +66,37 @@ const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
     navigate(`/product-detail/${productId}`);
   };
 
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-60">
+      <div className="flex justify-between items-center mt-6">
+        <h2 className="text-2xl font-bold">Products</h2>
+        <div>
+          <label htmlFor="sort" className="mr-2">Sort by:</label>
+          <select
+            id="sort"
+            value={sortCriteria}
+            onChange={(e) => setSortCriteria(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-1"
+          >
+            <option value="default">Default</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+      <div className="mt-2 mb-4">
+        <p>Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, sortedProducts.length)} of {sortedProducts.length} results</p>
+      </div>
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
+        {currentProducts.map((product) => (
           <div 
             key={product.product_id} 
             className="group relative border border-gray-300 rounded-lg cursor-pointer"
@@ -85,6 +125,22 @@ const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex justify-center mt-8">
+        <nav>
+          <ul className="inline-flex -space-x-px">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li key={index + 1}>
+                <button
+                  onClick={() => paginate(index + 1)}
+                  className={`px-3 py-2 ml-0 leading-tight ${currentPage === index + 1 ? 'bg-gray-200 text-gray-800' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-800'}`}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </div>
   );

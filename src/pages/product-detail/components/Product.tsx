@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getProductDetail } from '@/lib/api/productdetail-api';
+import { useCart } from '@/context/CartContext';
 
 const Product: React.FC<{ productId: number }> = ({ productId }) => {
   const [product, setProduct] = useState({
@@ -11,6 +12,7 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
     quantity: 1,
   });
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -49,6 +51,17 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
     setProduct(prevProduct => ({ ...prevProduct, quantity: Math.max(1, prevProduct.quantity - 1) }));
   };
 
+  const handleAddToCart = () => {
+    addToCart({
+      id: productId,
+      name: product.name,
+      size: product.weight,
+      price: product.price,
+      quantity: product.quantity,
+      imageUrl: product.images[0],
+    });
+  };
+
   return (
     <div className="flex" style={{minHeight: '500px'}}>
       <div className="w-1/2 relative">
@@ -78,7 +91,12 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
           <input type="text" value={product.quantity} className="w-12 text-center border-t border-b border-gray-300 h-10" readOnly />
           <button className="bg-gray-100 px-3 py-2 rounded-r-md border border-gray-300" onClick={handleIncrement}>+</button>
         </div>
-        <button className="bg-gray-700 text-white rounded-md px-20 py-4 mt-4 w-[282px] mx-auto mb-8">Add to Cart</button>
+        <button 
+          className="bg-gray-700 text-white rounded-md px-20 py-4 mt-4 w-[282px] mx-auto mb-8"
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );
