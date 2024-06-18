@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,6 +9,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import Iconography from '@/components/icons/Iconography';
+import { useCart } from '@/context/CartContext';
 
 // Define the CartItem and SheetCartProps interfaces
 interface CartItem {
@@ -21,12 +21,24 @@ interface CartItem {
   imageUrl: string;
 }
 
-interface SheetCartProps {
-  items: CartItem[];
-}
-
 // Define the SheetCart component
-export function SheetCart({ items }: SheetCartProps) {
+export function SheetCart() {
+  const { items, updateQuantity } = useCart();
+
+  const handleIncrement = (id: number) => {
+    const item = items.find(item => item.id === id);
+    if (item) {
+      updateQuantity(id, item.quantity + 1);
+    }
+  };
+
+  const handleDecrement = (id: number) => {
+    const item = items.find(item => item.id === id);
+    if (item && item.quantity > 1) {
+      updateQuantity(id, item.quantity - 1);
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -44,9 +56,9 @@ export function SheetCart({ items }: SheetCartProps) {
                 <div className="font-semibold">{item.name}</div>
                 <div className="text-gray-500">{item.size}</div>
                 <div className="flex items-center mt-2 ">
-                  <Button variant="outline" size="sm">-</Button>
+                  <Button variant="outline" size="sm" onClick={() => handleDecrement(item.id)}>-</Button>
                   <span className="mx-2">{item.quantity}</span>
-                  <Button variant="outline" size="sm">+</Button>
+                  <Button variant="outline" size="sm" onClick={() => handleIncrement(item.id)}>+</Button>
                 </div>
               </div>
               <div className="text-right">
@@ -64,6 +76,3 @@ export function SheetCart({ items }: SheetCartProps) {
     </Sheet>
   );
 }
-
-
-
