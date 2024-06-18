@@ -21,11 +21,14 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/assets/icons/Iconography/SearchIcon.tsx"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src",
+    "src/assets/icons/Iconography/SearchIcon.tsx"
+  ],
+  "references": [
+    { "path": "./tsconfig.node.json" }
+  ]
 }
