@@ -18,7 +18,7 @@ function DashboardLayout() {
         {sidebarItems.map(({ icon, title }, index) => (
           <div
             key={index}
-            className={`flex gap-4 px-4 py-3 items-center ${title === selected ? 'bg-[#f6f6f6] text-[#0E1422]' : 'text-[#5C5F6A]'} `}
+            className={`flex gap-4 px-4 py-3 items-center ${title === selected ? 'bg-[#f6f6f6] text-[#517adb]' : 'text-[#5C5F6A]'} `}
             onClick={() => {
               handleClickSidebar(title);
             }}
