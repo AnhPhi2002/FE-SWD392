@@ -1,10 +1,10 @@
-import Input from "@/pages/login/components/Input";
-import Button from "../Button";
+import { Input } from '@/components/ui/input';
+import Button from '../Button';
 
 const Address = () => {
   return (
     <>
-      <Input label="Address" id="address" />
+      <Input />
       <Button>Save Changes</Button>
     </>
   );
