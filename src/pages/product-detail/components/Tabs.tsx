@@ -8,7 +8,9 @@ interface Review {
   rating: number;
   comment: string;
   user_id: number;
-  full_name?: string;
+  full_name?: string; // Add full_name to the interface
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface User {
@@ -22,14 +24,17 @@ const Tabs: React.FC = () => {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
   const [productDetail, setProductDetail] = useState({ description: '' });
   const productId = 12;
 
   useEffect(() => {
+    if (activeTab === 'review') {
+      fetchReviews();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
     fetchProductDetails();
-    fetchReviews();
-    fetchUsers();
   }, []);
 
   const fetchProductDetails = async () => {
@@ -44,25 +49,9 @@ const Tabs: React.FC = () => {
   const fetchReviews = async () => {
     try {
       const response = await getReviews(productId);
-      const reviewsWithFullName = response.data.map((review: Review) => {
-        const user = users.find((user) => user.user_id === review.user_id);
-        return {
-          ...review,
-          full_name: user ? user.full_name : 'Vô danh'
-        };
-      });
-      setReviews(reviewsWithFullName);
+      setReviews(response.data);
     } catch (error) {
       console.error('Error fetching reviews:', error);
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/users/all');
-      setUsers(response.data);
-    } catch (error) {
-      console.error('Error fetching users:', error);
     }
   };
 
@@ -77,18 +66,17 @@ const Tabs: React.FC = () => {
   };
 
   const submitReview = async () => {
-    const userId = localStorage.getItem('userId'); // Lấy user_id từ localStorage
+    const userId = Number(localStorage.getItem('userId'));
     const newReview = {
       product_id: productId,
+      user_id: userId,
       rating: rating,
-      comment: reviewText,
-      user_id: parseInt(userId || '0') // Đảm bảo user_id là số
+      comment: reviewText
     };
 
     try {
       const response = await review(newReview);
-      const user = users.find((user) => user.user_id === response.data.user_id);
-      setReviews([...reviews, { ...response.data, full_name: user ? user.full_name : 'Vô danh' }]);
+      setReviews([...reviews, response.data]);
     } catch (error) {
       console.error('Error submitting review:', error);
     }
