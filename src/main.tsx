@@ -18,6 +18,7 @@ import AboutPage from './pages/about/index.tsx';
 import ContactPage from './pages/contact/index.tsx';
 import ProductDetail from './pages/product-detail/index.tsx';
 import DashboardLayout from './layout/dashboard/index.tsx';
+import { CartProvider } from './context/CartContext.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -56,15 +57,19 @@ const router = createBrowserRouter([
         path: 'contact',
         element: <ContactPage />
       },
-      {
-        path: 'product/:product_id',
+      // {
+      //   path: 'product-detail/:product_id',
+      //   element: <ProductDetail />
+      // },  
+       {
+        path: 'product-detail/:productId',
         element: <ProductDetail />
       },
     ]
   },
  
   {
-    path: 'auth',
+    path: 'login',
     element: (
       <AuthLayout>
         <Login />
@@ -80,8 +85,10 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
-      <ToastContainer autoClose={3000} />
+      <CartProvider>
+        <RouterProvider router={router} />
+        <ToastContainer autoClose={3000} />
+      </CartProvider>
     </Provider>
   </React.StrictMode>
 );
