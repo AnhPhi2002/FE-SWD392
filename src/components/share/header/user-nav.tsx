@@ -9,7 +9,7 @@ export default function UserNav() {
   const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem('accessToken');
-    navigate('/login');
+    navigate('/');
   };
   return (
     <div className="pl-5">
@@ -41,7 +41,7 @@ export default function UserNav() {
           ) : (
             <Link to="auth">
               <DropdownMenuItem className="cursor-pointer">Login</DropdownMenuItem>
-            </Link>
+            </Link> 
           )}
         </DropdownMenuContent>
       </DropdownMenu>
