@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { updateAccount } from '@/schema/auth';
 import InputCustome from '../Input';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,7 +15,7 @@ import { useUploadImage } from '@/hooks/useUploadImage';
 import { useEffect } from 'react';
 import { userAPI } from '@/lib/api/user-api';
 const AccountDetail = () => {
-  const { onChange, handleFileInputClick, fileInputRef, avatarUrl, setAvatarUrl } = useUploadImage();
+  const { handleFileInputClick, avatarUrl, setAvatarUrl } = useUploadImage();
   const form = useForm<z.infer<typeof updateAccount>>({
     resolver: zodResolver(updateAccount),
     defaultValues: {
@@ -53,12 +53,11 @@ const AccountDetail = () => {
       toast.error(error);
     }
   }
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <>
-      <input type="image" ref={fileInputRef} style={{ display: 'none' }} onChange={onChange} />
       <Avatar>
         <AvatarImage
           className="w-20 h-20"
