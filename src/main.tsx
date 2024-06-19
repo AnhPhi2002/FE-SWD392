@@ -19,6 +19,7 @@ import ContactPage from './pages/contact/index.tsx';
 import ProductDetail from './pages/product-detail/index.tsx';
 import DashboardLayout from './layout/dashboard/index.tsx';
 import { CartProvider } from './context/CartContext.tsx';
+import AfterPayment from './pages/after-payment/index.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -57,13 +58,14 @@ const router = createBrowserRouter([
         path: 'contact',
         element: <ContactPage />
       },
-      // {
-      //   path: 'product-detail/:product_id',
-      //   element: <ProductDetail />
-      // },  
+       
        {
         path: 'product-detail/:productId',
         element: <ProductDetail />
+      },
+      {
+        path: 'after-payment',
+        element: <AfterPayment />
       },
     ]
   },
