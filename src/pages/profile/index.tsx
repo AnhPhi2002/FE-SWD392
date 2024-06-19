@@ -6,12 +6,14 @@ import Wishlist from "./wishlist";
 import Address from "./address";
 import Password from "./password";
 import AccountDetail from "./account-detail";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [currentTabs, setCurrentTabs] = useState("Orders");
   function handleClickTab(name: string) {
     setCurrentTabs(name);
   }
+
   const items = [1, 2, 3, 4, 6, 7];
   return (
     <>

@@ -4,13 +4,14 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import Logo from "../../../assets/images/Logomark.png";
+import { Link } from "react-router-dom";
 export function AvatarLogo() {
   return ( 
-  <div>
-    <Avatar>
+  <Link to={"/"}>
+    <Avatar >
       <AvatarImage src={Logo} />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
-    </div>
+ </Link>
   )
 }

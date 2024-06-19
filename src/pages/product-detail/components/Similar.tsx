@@ -31,7 +31,7 @@ const Similar: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pb-60">
       <h2 className="text-3xl text-center font-extrabold tracking-tight text-gray-900 pb-20 pt-40">
-        ProductList
+        other products
       </h2>
       <div className="mt-6 grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 gap-x-6">
         {products.map((product) => (

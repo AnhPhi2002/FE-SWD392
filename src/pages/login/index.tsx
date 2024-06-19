@@ -23,7 +23,7 @@ const Login = () => {
       localStorage.setItem('accessToken', res.data.token);
       toast.success('Login successfully');
       setTimeout(() => {
-        navigate('/product-detail');
+        navigate('/');
       }, 1000);
     } catch (error: any) {
       toast.error(error.message);

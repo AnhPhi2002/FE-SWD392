@@ -10,6 +10,14 @@ import { ToastContainer } from 'react-toastify';
 import Layout from './layout/index.tsx';
 import HomePage from './pages/home/index.tsx';
 import ErrorPage from './pages/error-page/index.tsx';
+import CheckOut from './pages/checkout/index.tsx';
+import Login from './pages/login/index.tsx';
+import Profile from './pages/profile/index.tsx';
+import AuthLayout from './layout/auth/index.tsx';
+import AboutPage from './pages/about/index.tsx';
+import ContactPage from './pages/contact/index.tsx';
+import ProductDetail from './pages/product-detail/index.tsx';
+import DashboardLayout from './layout/dashboard/index.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -31,8 +39,41 @@ const router = createBrowserRouter([
       {
         path: '/home',
         element: <HomePage />
-      }
+      },
+      {
+        path: 'profile',
+        element: <Profile />
+      },
+      {
+        path: 'checkout',
+        element: <CheckOut />
+      },
+      {
+        path: 'about',
+        element: <AboutPage />
+      },
+      {
+        path: 'contact',
+        element: <ContactPage />
+      },
+      {
+        path: 'product/:product_id',
+        element: <ProductDetail />
+      },
     ]
+  },
+ 
+  {
+    path: 'auth',
+    element: (
+      <AuthLayout>
+        <Login />
+      </AuthLayout>
+    )
+  },
+  {
+    path:"/dashboard", 
+    element: (<DashboardLayout />)
   }
 ]);
 

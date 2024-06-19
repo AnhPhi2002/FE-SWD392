@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getProduct } from '@/lib/api/product-api';
+import { Link } from 'react-router-dom';
 
 
 interface Product {
@@ -38,11 +39,14 @@ const ProductList: React.FC = () => {
         {products.map((product) => (
           <div key={product.product_id} className="group relative">
             <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden lg:h-80 lg:aspect-none">
+              <Link to={`/product/${product.product_id}`}>
               <img
                 src={product.image_url}
                 alt={product.product_name}
                 className="w-full h-full object-center object-cover lg:w-full lg:h-full"
               />
+              </Link>
+             
             </div>
             <div className="mt-4">
               <h3>
