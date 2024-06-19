@@ -18,3 +18,10 @@ export const registerSchema = z.object({
 export const forgetPasswordSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' })
 });
+export const updateAccount = z.object({
+  phone: z.string().min(10, { message: 'Phone number must be at least 10 characters long' }),
+  full_name: z.string(),
+  address: z.string(),
+  gender: z.string(),
+  birthday: z.date()
+});
