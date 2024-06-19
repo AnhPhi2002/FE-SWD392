@@ -2,11 +2,9 @@ import axios from 'axios';
 // const BASE_URL: string | undefined = import.meta.env.BACKEND_URL;
 // export const BASE_URL = '';
 const BASE_URL: string = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-
-      import axios from 'axios';
-    
+   
       export const axiosClient = axios.create({
-        baseURL: 'http://localhost:5000',
+        baseURL: BASE_URL,
         headers: {
           'Content-type': 'application/json',
         },
