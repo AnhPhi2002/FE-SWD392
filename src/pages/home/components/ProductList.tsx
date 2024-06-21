@@ -29,6 +29,18 @@ const ProductList: React.FC = () => {
     fetchProducts();
   }, []);
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'available':
+        return 'Available';
+      case 'out_of_stock':
+        return 'Out of Stock';
+      case 'discontinued':
+        return 'Discontinued';
+      default:
+        return 'Unknown Status';
+    }
+  };
   // Limit the products to the first four
   const limitedProducts = products.slice(0, 4);
 
@@ -48,10 +60,8 @@ const ProductList: React.FC = () => {
                 <p className="text-wrap">{product.product_name}</p>
               </h3>
               <div className="mt-2 flex space-x-2">
-                <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                >
-                  {product.status === 'available' ? 'In Stock' : 'Out of Stock'}
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.status === 'available' ? 'bg-green-100 text-green-800' : product.status === 'out_of_stock' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
+                  {getStatusLabel(product.status)}
                 </span>
                 <p className="text-sm pl-6 font-medium text-gray-900">{product.price}</p>
               </div>

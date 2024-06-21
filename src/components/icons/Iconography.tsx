@@ -10,6 +10,7 @@ import ChevronLeftIcon from "@/assets/icons/Iconography/ChevronLeftIcon";
 import ChevronRightIcon from "@/assets/icons/Iconography/ChevronRightIcon";
 import CopyIcon from "@/assets/icons/Iconography/CopyIcon";
 import DashboardIcon from "@/assets/icons/Iconography/DashboardIcon";
+import DeliveryIcon from "@/assets/icons/Iconography/DeliveryIcon";
 import EmptyStarIcon from "@/assets/icons/Iconography/EmptyStarIcon";
 import HeartIcon from "@/assets/icons/Iconography/HeartIcon";
 import HomeIcon from "@/assets/icons/Iconography/HomeIcon";
@@ -75,6 +76,7 @@ type IconographyPropsType = {
     | 'vector'
     | 'warning'
     | 'x'
+    | 'delivery'
  ;
 };
 const Iconography = ({ icon, ...props }: IconographyPropsType & React.HTMLAttributes<SVGSVGElement>) => {
@@ -186,6 +188,9 @@ const Iconography = ({ icon, ...props }: IconographyPropsType & React.HTMLAttrib
     }
     case 'x': {
       return <XIcon {...props} />;
+    }
+    case 'delivery': {
+      return <DeliveryIcon {...props} />;
     }
 
   }

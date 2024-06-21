@@ -8,7 +8,7 @@ import { store } from './lib/api/redux/store.ts';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Layout from './layout/index.tsx';
-import HomePage from './pages/home/index.tsx';
+
 import ErrorPage from './pages/error-page/index.tsx';
 import CheckOut from './pages/checkout/index.tsx';
 import Login from './pages/login/index.tsx';
@@ -19,7 +19,13 @@ import ContactPage from './pages/contact/index.tsx';
 import ProductDetail from './pages/product-detail/index.tsx';
 import DashboardLayout from './layout/dashboard/index.tsx';
 import { CartProvider } from './context/CartContext.tsx';
-import AfterPayment from './pages/after-payment/index.tsx';
+
+import HomePage from './pages/home/index.tsx';
+import ProductListings from './pages/product-list/index.tsx';
+import TrackingPage from './pages/tracking/index.tsx';
+import BlogPage from './pages/blog/index.tsx';
+import ForgetPassword from './pages/forget-password/index.tsx';
+import Register from './pages/register/index.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -58,29 +64,51 @@ const router = createBrowserRouter([
         path: 'contact',
         element: <ContactPage />
       },
-       
-       {
+      {
+        path: 'product-listing',
+        element: <ProductListings />
+      },
+      {
         path: 'product-detail/:productId',
         element: <ProductDetail />
       },
+      // {
+      //   path: 'after-payment',
+      //   element: <AfterPayment />
+      // }, 
       {
-        path: 'after-payment',
-        element: <AfterPayment />
+        path: 'tracking',
+        element: <TrackingPage />
       },
+      {
+        path: 'blog',
+        element: <BlogPage />
+      },
+      
     ]
   },
- 
   {
     path: 'auth',
     element: (
       <AuthLayout>
         <Login />
       </AuthLayout>
-    )
+    ),
+  
   },
   {
-    path:"/dashboard", 
-    element: (<DashboardLayout />)
+    path: 'forget-password',
+    element: <ForgetPassword />
+  },
+  {
+    path: 'register',
+    element: <Register />
+  },
+  {
+    path: '/dashboard',
+    element: (<DashboardLayout />
+
+    )
   }
 ]);
 

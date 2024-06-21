@@ -7,6 +7,7 @@ import { authAPI } from '@/lib/api/auth-api';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+
 const Login = () => {
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof loginSchema>>({
