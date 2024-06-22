@@ -22,7 +22,7 @@ const AccountDetail = () => {
       phone: '',
       full_name: '',
       address: '',
-      gender: '',
+      gender: 'male',
       birthday: new Date()
     }
   });
@@ -85,24 +85,27 @@ const AccountDetail = () => {
               <FormField
                 control={form.control}
                 name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Gender</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue="male">
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Gender" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  console.log(field.value);
+                  return (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
               <FormField
                 control={form.control}
@@ -118,7 +121,7 @@ const AccountDetail = () => {
                           </button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
-                          <Calendar mode="single" selected={field.value} onSelect={field.onChange} />{' '}
+                          <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
                         </PopoverContent>
                       </Popover>
                     </FormControl>
