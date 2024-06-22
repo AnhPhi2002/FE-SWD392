@@ -22,7 +22,7 @@ import { CartProvider } from './context/CartContext.tsx';
 
 import HomePage from './pages/home/index.tsx';
 import ProductListings from './pages/product-list/index.tsx';
-import TrackingPage from './pages/tracking/index.tsx';
+import TrackingPage from './pages/profile/tracking/index.tsx';
 import BlogPage from './pages/blog/index.tsx';
 import ForgetPassword from './pages/forget-password/index.tsx';
 import Register from './pages/register/index.tsx';

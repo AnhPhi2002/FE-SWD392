@@ -40,7 +40,7 @@ export function Menu() {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="">
+          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/blog">
             Blog
           </NavigationMenuLink>
         </NavigationMenuItem>

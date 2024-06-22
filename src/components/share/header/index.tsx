@@ -4,7 +4,8 @@ import { InputMenu } from "./InputMenu";
 import { Menu } from "./Menu";
 import { SheetCart } from "./SheetCart";
 import UserNav from "./user-nav";
-import TrackingOrderHome from "./TrackingOrderHome";
+
+import TrackingOrderIcon from "./TrackingOrderHome";
 
 // Define the cart items
 const cartItems = [
@@ -37,7 +38,7 @@ export default function Header() {
       </div>
       <div className="flex gap-4 items-center">
         <InputMenu />
-        <TrackingOrderHome />
+        <TrackingOrderIcon />
         <SheetCart  />
         <UserNav />
       </div>

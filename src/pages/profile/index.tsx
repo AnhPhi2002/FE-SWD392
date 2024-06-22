@@ -7,6 +7,8 @@ import Address from "./address";
 import Password from "./password";
 import AccountDetail from "./account-detail";
 import { useNavigate } from "react-router-dom";
+import TrackingPage from "./tracking";
+
 
 const Profile = () => {
   const [currentTabs, setCurrentTabs] = useState("Orders");
@@ -41,6 +43,7 @@ const Profile = () => {
             {currentTabs === "Address" && <Address />}
             {currentTabs === "Passowrd" && <Password />}
             {currentTabs === "Account Detail" && <AccountDetail />}
+            {currentTabs === "Tracking" && <TrackingPage/>} 
           </div>
         </div>
       </div>
