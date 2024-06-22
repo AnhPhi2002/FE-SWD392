@@ -2,16 +2,16 @@ import Iconography from '@/components/icons/Iconography';
 
 import { Link } from 'react-router-dom';
 
-const TrackingOrderHome = () => {
+const TrackingOrderIcon = () => {
   return (
     <div>
-      <Link to="/tracking"> 
+      <Link to="/">
         <Iconography icon="delivery" />
       </Link>
     </div>
   );
 };
 
-export default TrackingOrderHome;
+export default TrackingOrderIcon;
 
 

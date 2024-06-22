@@ -24,7 +24,7 @@ export default function UserNav() {
             </Avatar>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuContent className="w-10" align="end" forceMount>
           <DropdownMenuSeparator />
           <Link to="/profile">
             <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>

@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
       <section className="pl-40 pr-40">
         <BestSelling />
       </section>
-      <section className="pl-40 pr-40 bg-gray-100">
+      <section className="pl-40 pr-40 bg-gray-100" >
         <CategoriesCTA />
       </section>
       <section className="pl-40 pr-40">

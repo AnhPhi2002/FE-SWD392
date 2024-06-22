@@ -22,10 +22,11 @@ import { CartProvider } from './context/CartContext.tsx';
 
 import HomePage from './pages/home/index.tsx';
 import ProductListings from './pages/product-list/index.tsx';
-import TrackingPage from './pages/tracking/index.tsx';
+import TrackingPage from './pages/profile/tracking/index.tsx';
 import BlogPage from './pages/blog/index.tsx';
 import ForgetPassword from './pages/forget-password/index.tsx';
 import Register from './pages/register/index.tsx';
+import { Toaster } from 'sonner';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
       // {
       //   path: 'after-payment',
       //   element: <AfterPayment />
-      // }, 
+      // },
       {
         path: 'tracking',
         element: <TrackingPage />
@@ -83,8 +84,7 @@ const router = createBrowserRouter([
       {
         path: 'blog',
         element: <BlogPage />
-      },
-      
+      }
     ]
   },
   {
@@ -93,8 +93,7 @@ const router = createBrowserRouter([
       <AuthLayout>
         <Login />
       </AuthLayout>
-    ),
-  
+    )
   },
   {
     path: 'forget-password',
@@ -106,9 +105,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: (<DashboardLayout />
-
-    )
+    element: <DashboardLayout />
   }
 ]);
 
@@ -118,6 +115,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <CartProvider>
         <RouterProvider router={router} />
         <ToastContainer autoClose={3000} />
+        <Toaster closeButton position="top-right" richColors duration={1000} />
       </CartProvider>
     </Provider>
   </React.StrictMode>

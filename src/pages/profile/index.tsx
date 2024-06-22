@@ -7,28 +7,22 @@ import Address from "./address";
 import Password from "./password";
 import AccountDetail from "./account-detail";
 import { useNavigate } from "react-router-dom";
+import TrackingPage from "./tracking";
+
 
 const Profile = () => {
-  const [currentTabs, setCurrentTabs] = useState("Orders");
+  const [currentTabs, setCurrentTabs] = useState('Orders');
   function handleClickTab(name: string) {
     setCurrentTabs(name);
   }
 
-  const items = [1, 2, 3, 4, 6, 7];
   return (
     <>
-      <h1 className="text-black text-2xl font-semibold h-[20vh] px-[12%] py-8 bg-[#f6f6f6]">
-        My Account
-      </h1>
+      <h1 className="text-black text-2xl font-semibold h-[20vh] px-[12%] py-8 bg-[#f6f6f6]">My Account</h1>
       <div className="px-[12%] py-10 h-[100vh] flex">
         <aside className="w-1/3 border-r-2 pt-[6%] pr-8 border-[#f6f6f6]">
           {sidebarItem.map((item, index) => (
-            <SidebarItem
-              key={index}
-              {...item}
-              active={currentTabs == item.name}
-              onClick={() => handleClickTab(item.name)}
-            />
+            <SidebarItem key={index} {...item} active={currentTabs == item.name} onClick={() => handleClickTab(item.name)} />
           ))}
         </aside>
         <div className="pl-8 pt-4 w-2/3">
@@ -41,6 +35,7 @@ const Profile = () => {
             {currentTabs === "Address" && <Address />}
             {currentTabs === "Passowrd" && <Password />}
             {currentTabs === "Account Detail" && <AccountDetail />}
+            {currentTabs === "Tracking" && <TrackingPage/>} 
           </div>
         </div>
       </div>
