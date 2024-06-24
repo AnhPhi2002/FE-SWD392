@@ -2,9 +2,7 @@ import SidebarItem from "./SidebarItem";
 import { useState } from "react";
 import { sidebarItem } from "./data";
 import MyOrders from "./my-order";
-import Wishlist from "./wishlist";
-import Address from "./address";
-import Password from "./password";
+
 import AccountDetail from "./account-detail";
 import { useNavigate } from "react-router-dom";
 import TrackingPage from "./tracking";
@@ -28,12 +26,8 @@ const Profile = () => {
         <div className="pl-8 pt-4 w-2/3">
           <h2 className="text-xl font-semibold">{currentTabs}</h2>
           <div className="space-y-6 mt-10 h-[70%] overflow-y-scroll scrollbar pr-5">
-            {currentTabs === "Orders" &&
-              items.map((item, index) => <MyOrders key={index} />)}
-            {currentTabs === "Wishlist" &&
-              items.map((item, index) => <Wishlist key={index} />)}
-            {currentTabs === "Address" && <Address />}
-            {currentTabs === "Passowrd" && <Password />}
+            {currentTabs === "Orders" && <MyOrders />}  
+          
             {currentTabs === "Account Detail" && <AccountDetail />}
             {currentTabs === "Tracking" && <TrackingPage/>} 
           </div>

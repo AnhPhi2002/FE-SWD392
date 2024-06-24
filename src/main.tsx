@@ -27,6 +27,8 @@ import BlogPage from './pages/blog/index.tsx';
 import ForgetPassword from './pages/forget-password/index.tsx';
 import Register from './pages/register/index.tsx';
 import { Toaster } from 'sonner';
+import Cart from './pages/cart/index.tsx';
+import AfterPayment from './pages/after-payment/index.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -54,6 +56,10 @@ const router = createBrowserRouter([
         element: <Profile />
       },
       {
+        path: 'cart',
+        element: <Cart />
+      },
+      {
         path: 'checkout',
         element: <CheckOut />
       },
@@ -73,10 +79,10 @@ const router = createBrowserRouter([
         path: 'product-detail/:productId',
         element: <ProductDetail />
       },
-      // {
-      //   path: 'after-payment',
-      //   element: <AfterPayment />
-      // },
+      {
+        path: 'after-payment',
+        element: <AfterPayment />
+      },
       {
         path: 'tracking',
         element: <TrackingPage />

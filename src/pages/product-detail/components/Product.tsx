@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getProductDetail } from '@/lib/api/productdetail-api';
 import { useCart } from '@/context/CartContext';
 
@@ -13,11 +14,12 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   });
   const [currentIndex, setCurrentIndex] = useState(0);
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await getProductDetail(productId);  
+        const response = await getProductDetail(productId);
         const data = response.data;
         setProduct({
           images: data.image_url,
@@ -28,7 +30,7 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
           quantity: 1,
         });
       } catch (error) {
-        console.error('Error fetching product details:', error);
+        console.error('Lỗi khi tải thông tin sản phẩm:', error);
       }
     };
 
@@ -36,11 +38,11 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   }, [productId]);
 
   const handleNextImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % product.images.length);
+    setCurrentIndex(prevIndex => (prevIndex + 1) % product.images.length);
   };
 
   const handlePrevImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
+    setCurrentIndex(prevIndex => (prevIndex - 1 + product.images.length) % product.images.length);
   };
 
   const handleIncrement = () => {
@@ -52,18 +54,25 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   };
 
   const handleAddToCart = () => {
-    addToCart({
-      id: productId,
-      name: product.name,
-      size: product.weight,
-      price: product.price,
-      quantity: product.quantity,
-      imageUrl: product.images[0],
-    });
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      if (window.confirm('Bạn phải đăng nhập trước khi mua hàng. Chuyển đến trang đăng nhập?')) {
+        navigate('/auth');
+      }
+    } else {
+      addToCart({
+        id: productId,
+        name: product.name,
+        size: product.weight,
+        price: product.price,
+        quantity: product.quantity,
+        imageUrl: product.images[0],
+      });
+    }
   };
 
   return (
-    <div className="flex" style={{minHeight: '500px'}}>
+    <div className="flex" style={{ minHeight: '500px' }}>
       <div className="w-1/2 relative">
         {product.images.length > 0 && (
           <div className="h-full flex items-center justify-center">
@@ -81,7 +90,7 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
         <h1 className="text-2xl font-bold mt-5">{product.name} loại {product.weight} ml</h1>
         <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 my-1 w-fit">
           <i className="fa-solid fa-star text-gray-500"></i>
-          <p className="text-sm text-gray-500 ml-2">Rating:  Stars</p>
+          <p className="text-sm text-gray-500 ml-2">Rating: Stars</p>
         </div>
         <div className="text-md my-2">Made in: {product.placeOfProduction}</div>
         <div className="text-lg font-semibold mb-4">Price: ${product.price}</div>
@@ -92,7 +101,7 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
           <button className="bg-gray-100 px-3 py-2 rounded-r-md border border-gray-300" onClick={handleIncrement}>+</button>
         </div>
         <button 
-          className="bg-gray-700 text-white rounded-md px-20 py-4 mt-4 w-[282px] mx-auto mb-8"
+          className="bg-gray-700 text-white rounded-md px-20 py-4 mt-4 w-[282px] mx-auto mb-8 active:animate-click-animation"
           onClick={handleAddToCart}
         >
           Add to Cart
