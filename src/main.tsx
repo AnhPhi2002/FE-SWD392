@@ -29,6 +29,8 @@ import Register from './pages/register/index.tsx';
 import { Toaster } from 'sonner';
 import Cart from './pages/cart/index.tsx';
 import AfterPayment from './pages/after-payment/index.tsx';
+import PaymentPage from './pages/paypal/index.tsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -62,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: 'checkout',
         element: <CheckOut />
+      },
+      {
+        path: 'payment/:order_id',
+        element: <PaymentPage />
       },
       {
         path: 'about',
@@ -103,11 +109,15 @@ const router = createBrowserRouter([
   },
   {
     path: 'forget-password',
-    element: <ForgetPassword />
+    element: 
+    <AuthLayout> <ForgetPassword />
+    </AuthLayout>
   },
   {
     path: 'register',
-    element: <Register />
+    element:
+    <AuthLayout> <Register />
+    </AuthLayout>
   },
   {
     path: '/dashboard',

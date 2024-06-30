@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ShippingAddress from './components/ShippingAddress';
-import YourOrder from './components/YourOrder';
+import { YourOrder } from './components/YourOrder';
 import { useLocation } from 'react-router-dom';
 
 const CheckOut = () => {
@@ -21,7 +21,7 @@ const CheckOut = () => {
     <div className="min-h-[600px] bg-gray-100 flex items-center justify-center py-12 px-4">
       <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ShippingAddress onFormValid={handleFormValid} updateUserInfo={updateUserInfo} />
-        <YourOrder isFormValid={isFormValid} updateUserInfo={updateUserInfo} items={items} total={total} />
+        <YourOrder isFormValid={isFormValid} items={items} total={total} />
       </div>
     </div>
   );

@@ -27,16 +27,19 @@ interface CartItem {
 
 interface CartContextProps {
   items: CartItem[];
+  total: number; // Thêm tổng tiền của giỏ hàng
   addToCart: (item: CartItem) => void;
   updateQuantity: (cartItemId: number, quantity: number) => void;
   removeFromCart: (cartItemId: number) => void;
   fetchCart: () => void;
 }
 
+
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [total, setTotal] = useState(0);
 
   const fetchCart = async () => {
     const token = localStorage.getItem('accessToken');
@@ -60,8 +63,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0));
+  }, [items]);
 
   const addToCart = async (item: CartItem) => {
     const token = localStorage.getItem('accessToken');
@@ -100,7 +103,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <CartContext.Provider value={{ items, addToCart, updateQuantity, removeFromCart, fetchCart }}>
+    <CartContext.Provider value={{ items, total, addToCart, updateQuantity, removeFromCart, fetchCart }}>
       {children}
     </CartContext.Provider>
   );

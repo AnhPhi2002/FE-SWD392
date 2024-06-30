@@ -47,7 +47,7 @@ const BestSelling: React.FC = () => {
   const limitedProducts = products.slice(0, 4);
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pb-60">
+    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pb-60 z-10">
       <h2 className="text-3xl text-center font-extrabold tracking-tight text-gray-900 pb-20 pt-40">Best Seller</h2>
       <div className="mt-6 grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 gap-x-6">
         {limitedProducts.map((product) => (

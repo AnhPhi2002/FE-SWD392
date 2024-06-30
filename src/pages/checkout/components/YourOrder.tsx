@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+// YourOrder.tsx
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
 
-interface CartItem {
+interface Item {
   id: number;
   name: string;
-  size: string;
+  imageUrl: string;
   price: number;
   quantity: number;
-  imageUrl: string;
 }
 
 interface Voucher {
@@ -17,151 +17,141 @@ interface Voucher {
   code: string;
   discount: number;
   minimum_order_value: number;
-  used: boolean;
   discount_type: string;
   expiration_date: string;
 }
 
 interface YourOrderProps {
-  isFormValid: boolean;
-  updateUserInfo: () => void;
-  items: CartItem[];
+  items: Item[];
   total: number;
+  isFormValid: boolean;
 }
 
-const YourOrder: React.FC<YourOrderProps> = ({updateUserInfo, items, total }) => {
-  const navigate = useNavigate();
+export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrderProps) {
   const [voucherCode, setVoucherCode] = useState<string>('');
-  const [discount, setDiscount] = useState<number>(0);
-  const [voucherId, setVoucherId] = useState<number | null>(null);
-  const [finalTotal, setFinalTotal] = useState<number>(total);
+  const [total, setTotal] = useState<number>(initialTotal);
+  const [voucher, setVoucher] = useState<Voucher | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setFinalTotal(total - discount);
-  }, [total, discount]);
+    setTotal(initialTotal);
+  }, [initialTotal]);
 
-  const handleVoucherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVoucherCode(e.target.value);
-  };
+  const handleVoucherApply = async () => {
+    if (!voucherCode) {
+      alert('Please enter a voucher code.');
+      return;
+    }
 
-  const handleApplyVoucher = async () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      alert('Bạn phải đăng nhập để sử dụng voucher');
-      navigate('/auth');
+      alert('Authentication token is missing. Please login again.');
       return;
     }
 
     try {
-      const response = await axios.get('http://localhost:5000/api/vouchers', {
+      const vouchersResponse = await axios.get<Voucher[]>(`http://localhost:5000/api/vouchers`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const fetchedVouchers = response.data;
-      const appliedVoucher = fetchedVouchers.find((voucher: Voucher) => voucher.code === voucherCode);
+      const vouchers = vouchersResponse.data;
+      const matchedVoucher = vouchers.find(v => v.code === voucherCode);
 
-      if (!appliedVoucher) {
-        alert('Mã giảm giá sai');
+      if (!matchedVoucher) {
+        alert('No voucher found with that code.');
         return;
       }
 
-      if (total < appliedVoucher.minimum_order_value) {
-        alert(`Đơn hàng phải lớn hơn ${appliedVoucher.minimum_order_value} để sử dụng voucher`);
+      const detailsResponse = await axios.get<Voucher>(`http://localhost:5000/api/vouchers/${matchedVoucher.voucher_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const fetchedVoucher = detailsResponse.data;
+
+      const currentDate = new Date();
+      const expirationDate = new Date(fetchedVoucher.expiration_date);
+
+      if (currentDate > expirationDate) {
+        alert('This voucher has expired.');
         return;
       }
 
-      if (appliedVoucher.discount_type === 'percentage') {
-        setDiscount((total * appliedVoucher.discount) / 100);
-      } else if (appliedVoucher.discount_type === 'amount') {
-        setDiscount(appliedVoucher.discount);
+      if (total < fetchedVoucher.minimum_order_value) {
+        alert(`Minimum order value to apply this voucher is ${fetchedVoucher.minimum_order_value}.`);
+        return;
       }
 
-      setVoucherId(appliedVoucher.voucher_id);
+      const discountAmount = fetchedVoucher.discount_type === 'percentage' ? total * (fetchedVoucher.discount / 100) : fetchedVoucher.discount;
+      setTotal(total - discountAmount);
+      setVoucher(fetchedVoucher);
     } catch (error) {
-      console.error('Lỗi khi áp dụng voucher:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Không thể lấy thông tin voucher:', error.message);
+        alert(`Không thể lấy thông tin voucher: ${error.response?.status} ${error.response?.statusText}`);
+      } else {
+        console.error('Một lỗi không mong muốn đã xảy ra:', error);
+        alert('Một lỗi không mong muốn đã xảy ra. Vui lòng thử lại.');
+      }
     }
   };
 
   const handlePlaceOrder = async () => {
-    updateUserInfo();
-
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      alert('Bạn phải đăng nhập để đặt hàng');
-      navigate('/auth');
-      return;
-    }
-
-    const orderItems = items.map(item => ({
-      product_id: item.id,
-      quantity: item.quantity,
-      price: item.price,
-    }));
-
     try {
-      const response = await axios.post('http://localhost:5000/api/orders', {
-        total_amount: finalTotal,
-        status: 'pending',
-        voucher_id: voucherId,
-        items: orderItems,
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
+      const orderData = {
+        items: items.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        total_amount: total,
+        voucher_code: voucher ? voucher.code : null
+      };
+  
+      const response = await axios.post('http://localhost:5000/api/orders', orderData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
       });
-
+  
       if (response.status === 201) {
-        alert('Đơn hàng của bạn đã được tạo thành công!');
-        navigate('/after-payment');
+        const order_id = response.data.order_id;
+        alert('Your order has been successfully placed!');
+        navigate(`/payment/${order_id}`);
       }
     } catch (error) {
-      console.error('Lỗi khi tạo đơn hàng:', error);
-      alert('Đã xảy ra lỗi khi tạo đơn hàng');
+      console.error('Failed to place order:', error);
+      alert('There was an error placing your order.');
     }
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-md w-full max-w-sm mx-auto">
-      <h2 className="text-lg font-medium mb-4">Your Order</h2>
-      <div className="flex items-center mb-4">
-        {items.map((item) => (
-          <img key={item.id} src={item.imageUrl} alt={item.name} className="h-10 w-10 rounded-full mr-2" />
+    <div className="container mx-auto p-6 bg-white shadow-md rounded-md max-w-lg">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Your Order</h2>
+      <div className="max-h-[400px] overflow-y-auto">
+        {items.map((item: Item) => (
+          <div key={item.id} className="flex items-center gap-4 p-4 border rounded-md">
+            <img src={item.imageUrl} className="w-20 h-16" alt={item.name} />
+            <div>
+              <div className="font-semibold">{item.name}</div>
+              <div>${item.price.toFixed(2)} x {item.quantity}</div>
+            </div>
+          </div>
         ))}
       </div>
-      <div className="flex justify-between mb-2">
-        <span>Subtotal:</span>
-        <span>${total.toFixed(2)}</span>
-      </div>
-      <div className="flex justify-between mb-2">
-        <span>Shipping:</span>
-        <span>Free</span>
-      </div>
-      {discount > 0 && (
-        <div className="flex justify-between mb-2">
-          <span>Discount:</span>
-          <span>-${discount.toFixed(2)}</span>
-        </div>
-      )}
       <div className="flex justify-between font-medium text-lg">
         <span>Total:</span>
-        <span>${finalTotal.toFixed(2)}</span>
+        <span>${total.toFixed(2)}</span>
       </div>
-      <div className="mt-4">
-        <input
-          type="text"
-          placeholder="Enter voucher code"
-          value={voucherCode}
-          onChange={handleVoucherChange}
-          className="w-full p-2 border rounded-md"
-        />
-        <Button onClick={handleApplyVoucher} className="w-full mt-2 bg-black text-white py-2 rounded-md">Apply Voucher</Button>
-      </div>
-      <Button
-        className="mt-6 w-full bg-black text-white py-2 rounded-md"
-        // disabled={!isFormValid}
-        onClick={handlePlaceOrder}
-      >
-        Place Order
-      </Button>
+      {voucher && (
+        <div>
+          <p>Voucher applied: {voucher.code} - ${voucher.discount}</p>
+        </div>
+      )}
+      <input
+        type="text"
+        placeholder="Enter voucher code"
+        value={voucherCode}
+        onChange={(e) => setVoucherCode(e.target.value)}
+        className="mt-4 w-full border p-2 rounded-md"
+      />
+      <Button onClick={handleVoucherApply} className="mt-4 w-full bg-black text-white py-2 rounded-md">Apply Voucher</Button>
+      <Button onClick={handlePlaceOrder} disabled={!isFormValid} className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Place Order</Button>
     </div>
   );
-};
-
-export default YourOrder;
+}
