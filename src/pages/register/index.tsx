@@ -81,7 +81,7 @@ function Register() {
           <button className="bg-black text-white mt-4 w-full py-2">Register</button>
         </form>
         <div className="mt-4 text-center">
-          <Link to="../" className="text-sm  font-medium text-gray-600">
+          <Link to="/auth" className="text-sm  font-medium text-gray-600">
             Already have an account? Log in
           </Link>
         </div>
