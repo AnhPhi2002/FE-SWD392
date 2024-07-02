@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerSchema } from '@/schema/auth';
 import { toast } from 'sonner';
 import { authAPI } from '@/lib/api/auth-api';
@@ -16,12 +16,17 @@ function Register() {
       phone: ''
     }
   });
+
+  const navigate = useNavigate(); //
+
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
       const resData = await authAPI.register(values);
       if (resData.data) {
         form.reset();
         toast.success('Register success');
+
+        navigate('/auth'); //
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
