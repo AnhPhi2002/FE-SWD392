@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { registerSchema } from '@/schema/auth';
 import { toast } from 'sonner';
 import { authAPI } from '@/lib/api/auth-api';
@@ -16,17 +16,12 @@ function Register() {
       phone: ''
     }
   });
-
-  const navigate = useNavigate(); //
-
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
       const resData = await authAPI.register(values);
       if (resData.data) {
         form.reset();
         toast.success('Register success');
-
-        navigate('/auth'); //
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
@@ -81,7 +76,7 @@ function Register() {
           <button className="bg-black text-white mt-4 w-full py-2">Register</button>
         </form>
         <div className="mt-4 text-center">
-          <Link to="/auth" className="text-sm  font-medium text-gray-600">
+          <Link to="../" className="text-sm  font-medium text-gray-600">
             Already have an account? Log in
           </Link>
         </div>

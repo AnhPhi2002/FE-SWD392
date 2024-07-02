@@ -39,59 +39,66 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
 
   const handleVoucherApply = async () => {
     if (!voucherCode) {
-      alert('Please enter a voucher code.');
-      return;
+        alert('Please enter a voucher code.');
+        return;
     }
 
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      alert('Authentication token is missing. Please login again.');
-      return;
+        alert('Authentication token is missing. Please login again.');
+        return;
     }
 
     try {
-      const vouchersResponse = await axios.get<Voucher[]>(`http://localhost:5000/api/vouchers`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const vouchers = vouchersResponse.data;
-      const matchedVoucher = vouchers.find(v => v.code === voucherCode);
+        const vouchersResponse = await axios.get<Voucher[]>(`http://localhost:5000/api/vouchers`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const vouchers = vouchersResponse.data;
+        const matchedVoucher = vouchers.find(v => v.code === voucherCode);
 
-      if (!matchedVoucher) {
-        alert('No voucher found with that code.');
-        return;
-      }
+        if (!matchedVoucher) {
+            alert('No voucher found with that code.');
+            return;
+        }
 
-      const detailsResponse = await axios.get<Voucher>(`http://localhost:5000/api/vouchers/${matchedVoucher.voucher_id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const fetchedVoucher = detailsResponse.data;
+        const detailsResponse = await axios.get<Voucher>(`http://localhost:5000/api/vouchers/${matchedVoucher.voucher_id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const fetchedVoucher = detailsResponse.data;
 
-      const currentDate = new Date();
-      const expirationDate = new Date(fetchedVoucher.expiration_date);
+        const currentDate = new Date();
+        const expirationDate = new Date(fetchedVoucher.expiration_date);
 
-      if (currentDate > expirationDate) {
-        alert('This voucher has expired.');
-        return;
-      }
+        if (currentDate > expirationDate) {
+            alert('This voucher has expired.');
+            return;
+        }
 
-      if (total < fetchedVoucher.minimum_order_value) {
-        alert(`Minimum order value to apply this voucher is ${fetchedVoucher.minimum_order_value}.`);
-        return;
-      }
+        if (total < fetchedVoucher.minimum_order_value) {
+            alert(`Minimum order value to apply this voucher is ${fetchedVoucher.minimum_order_value}.`);
+            return;
+        }
 
-      const discountAmount = fetchedVoucher.discount_type === 'percentage' ? total * (fetchedVoucher.discount / 100) : fetchedVoucher.discount;
-      setTotal(total - discountAmount);
-      setVoucher(fetchedVoucher);
+        if (voucher && voucher.code === voucherCode) {
+            alert('This voucher has already been applied.');
+            return;
+        }
+
+        const discountAmount = fetchedVoucher.discount_type === 'percentage' ? total * (fetchedVoucher.discount / 100) : fetchedVoucher.discount;
+        // Calculate the new total based on the original total before any voucher was applied
+        const newTotal = initialTotal - discountAmount;
+        setTotal(newTotal);
+        setVoucher(fetchedVoucher);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Không thể lấy thông tin voucher:', error.message);
-        alert(`Không thể lấy thông tin voucher: ${error.response?.status} ${error.response?.statusText}`);
-      } else {
-        console.error('Một lỗi không mong muốn đã xảy ra:', error);
-        alert('Một lỗi không mong muốn đã xảy ra. Vui lòng thử lại.');
-      }
+        if (axios.isAxiosError(error)) {
+            console.error('Không thể lấy thông tin voucher:', error.message);
+            alert(`Không thể lấy thông tin voucher: ${error.response?.status} ${error.response?.statusText}`);
+        } else {
+            console.error('Một lỗi không mong muốn đã xảy ra:', error);
+            alert('Một lỗi không mong muốn đã xảy ra. Vui lòng thử lại.');
+        }
     }
-  };
+};
 
   const handlePlaceOrder = async () => {
     try {
@@ -140,7 +147,7 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
       </div>
       {voucher && (
         <div>
-          <p>Voucher applied: {voucher.code} - ${voucher.discount}</p>
+          <p>Voucher applied: {voucher.code}</p>
         </div>
       )}
       <input

@@ -6,15 +6,6 @@ import {
   removeFromCartAPI
 } from '@/lib/api/cart-api';
 
-// interface ProductItem {
-//   product_id: number;
-//   product_name: string;
-//   weight: number;
-//   price: number;
-//   quantity: number;
-//   image_url: string[];
-// }
-
 interface CartItem {
   id: number;
   cartItemId?: number; // Make cartItemId optional
@@ -27,13 +18,12 @@ interface CartItem {
 
 interface CartContextProps {
   items: CartItem[];
-  total: number; // Thêm tổng tiền của giỏ hàng
+  total: number; // Total amount of the cart
   addToCart: (item: CartItem) => void;
   updateQuantity: (cartItemId: number, quantity: number) => void;
   removeFromCart: (cartItemId: number) => void;
   fetchCart: () => void;
 }
-
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
@@ -48,7 +38,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const response = await fetchCartAPI(token);
         const cartItems = response.data.items.map(item => ({
           id: item.product.product_id,
-          cartItemId: item.cart_item_id, // Store cart_item_id
+          cartItemId: item.cart_item_id,
           name: item.product.product_name,
           size: item.product.weight.toString(),
           price: item.product.price,
@@ -57,12 +47,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
         setItems(cartItems);
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu giỏ hàng:', error);
+        console.error('Error loading cart data:', error);
       }
     }
   };
 
   useEffect(() => {
+    fetchCart(); // Fetch cart data when component mounts
+  }, []);
+
+  useEffect(() => {
+    // Recalculate the total when items change
     setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0));
   }, [items]);
 
@@ -71,9 +66,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       try {
         await addToCartAPI(token, { product_id: item.id, quantity: item.quantity });
-        fetchCart();
+        fetchCart(); // Refresh cart after adding item
       } catch (error) {
-        console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
+        console.error('Error adding product to cart:', error);
       }
     }
   };
@@ -83,9 +78,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       try {
         await updateQuantityAPI(token, cartItemId, quantity);
-        fetchCart();
+        fetchCart(); // Refresh cart after updating quantity
       } catch (error) {
-        console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
+        console.error('Error updating product quantity:', error);
       }
     }
   };
@@ -95,9 +90,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       try {
         await removeFromCartAPI(token, cartItemId);
-        fetchCart();
+        fetchCart(); // Refresh cart after removing item
       } catch (error) {
-        console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
+        console.error('Error removing product from cart:', error);
       }
     }
   };
@@ -112,7 +107,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart phải được sử dụng trong CartProvider');
+    throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 };

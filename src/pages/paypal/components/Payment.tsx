@@ -1,7 +1,6 @@
-// Payment.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface Item {
   id: number;
@@ -21,6 +20,9 @@ const Payment: React.FC = () => {
   const { order_id } = useParams<{ order_id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -47,6 +49,28 @@ const Payment: React.FC = () => {
 
     fetchOrder();
   }, [order_id]);
+
+  const handlePayment = async () => {
+    if (paymentMethod === 'cash') {
+      navigate('/after-payment');
+    } else if (paymentMethod === 'paypal') {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.post(`http://localhost:5000/api/payment/pay/`, {
+          order_id: order_id
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (response.data.approval_url) {
+          window.location.href = response.data.approval_url;
+        }
+      } catch (error) {
+        console.error('Failed to process PayPal payment:', error);
+        alert('Failed to process PayPal payment. Please try again.');
+      }
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -76,7 +100,27 @@ const Payment: React.FC = () => {
       {order.voucher_code && (
         <div className="text-green-500">Voucher applied: {order.voucher_code}</div>
       )}
-      <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Proceed to Payment</button>
+      <div>
+        <label className="mr-5">
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="cash"
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            checked={paymentMethod === 'cash'}
+          /> Pay on Delivery
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="paypal"
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            checked={paymentMethod === 'paypal'}
+          /> PayPal
+        </label>
+      </div>
+      <button onClick={handlePayment} className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Payment</button>
     </div>
   );
 };

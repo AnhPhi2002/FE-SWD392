@@ -101,24 +101,23 @@ const router = createBrowserRouter([
   },
   {
     path: 'auth',
-    element: (
-      <AuthLayout>
-        <Login />
-      </AuthLayout>
-    )
+    element: <AuthLayout />,
+    children: [
+      {
+        index: true,
+        element: <Login />
+      },
+      {
+        path: 'forget-password',
+        element: <ForgetPassword />
+      },
+      {
+        path: 'register',
+        element: <Register />
+      }
+    ]
   },
-  {
-    path: 'forget-password',
-    element: 
-    <AuthLayout> <ForgetPassword />
-    </AuthLayout>
-  },
-  {
-    path: 'register',
-    element:
-    <AuthLayout> <Register />
-    </AuthLayout>
-  },
+
   {
     path: '/dashboard',
     element: <DashboardLayout />

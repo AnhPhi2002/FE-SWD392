@@ -28,8 +28,8 @@ const ChatBox: React.FC = () => {
   const [userId, setUserId] = useState<number | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [messageId, setMessageId] = useState<number | null>(null);
+  const [roomId, setRoomId] = useState<string | null>(null);
   const recipientId = 2;
-  const [isMessageSent, setIsMessageSent] = useState<boolean>(false);
 
   useEffect(() => {
     fetchUserProfile();
@@ -46,22 +46,23 @@ const ChatBox: React.FC = () => {
   }, [userId, messageId]);
 
   useEffect(() => {
+    if (roomId) {
+      socket.emit('join room', roomId);
+    }
+  }, [roomId]);
+
+  useEffect(() => {
     socket.on('chat message', (message: Message) => {
-      if (!isMessageSent) {
-        setMessages((prevMessages) => {
-          const isMessageExist = prevMessages.some((msg) => msg.chat_id === message.chat_id);
-          if (isMessageExist) {
-            return prevMessages;
-          }
-          return [message, ...prevMessages];
-        });
-      }
+      setMessages((prevMessages) => [message, ...prevMessages]);
     });
 
     return () => {
+      if (roomId) {
+        socket.emit('leave room', roomId);
+      }
       socket.off('chat message');
     };
-  }, [isMessageSent]);
+  }, [roomId]);
 
   const fetchUserProfile = async () => {
     try {
@@ -106,6 +107,7 @@ const ChatBox: React.FC = () => {
         }
       }));
       setMessages(updatedMessages.reverse());
+      setRoomId(`room-${messageId}`);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -137,18 +139,10 @@ const ChatBox: React.FC = () => {
         user: currentUser || { user_id: userId!, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] },
         recipient: { user_id: recipientId, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] }
       };
-      setMessages((prevMessages) => {
-        const isMessageExist = prevMessages.some((msg) => msg.chat_id === data.chat_id);
-        if (isMessageExist) {
-          return prevMessages;
-        }
-        return [messageWithUser, ...prevMessages];
-      });
+      setMessages((prevMessages) => [messageWithUser, ...prevMessages]);
       setMessageId(data.messager_id);
       localStorage.setItem('messageId', String(data.messager_id));
       setNewMessage('');
-      setIsMessageSent(true);
-      setTimeout(() => setIsMessageSent(false), 1000);
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -156,6 +150,22 @@ const ChatBox: React.FC = () => {
 
   const handleNewMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
+  };
+
+  const getUserAvatar = (msg: Message) => {
+    if (msg.user_id === userId) {
+      return currentUser?.avatar_url?.[0] || 'default-avatar-url';
+    } else {
+      return msg.user?.avatar_url?.[0] || 'default-avatar-url';
+    }
+  };
+
+  const getUserName = (msg: Message) => {
+    if (msg.user_id === userId) {
+      return currentUser?.full_name || 'Unknown User';
+    } else {
+      return msg.user?.full_name || 'Unknown User';
+    }
   };
 
   return (
@@ -184,10 +194,10 @@ const ChatBox: React.FC = () => {
                 </span>
               </div>
               <img
-                src={msg.user_id === userId ? (currentUser?.avatar_url?.[0] || 'default-avatar-url') : (msg.user_id === recipientId ? (msg.recipient.avatar_url?.[0] || 'default-avatar-url') : (msg.user.avatar_url?.[0] || 'default-avatar-url'))}
+                src={getUserAvatar(msg)}
                 alt="User Avatar"
                 className="w-10 h-10 rounded-full order-1"
-                title={msg.user_id === userId ? currentUser?.full_name : (msg.user_id === recipientId ? msg.recipient.full_name : msg.user.full_name)}
+                title={getUserName(msg)}
               />
             </div>
           ))}

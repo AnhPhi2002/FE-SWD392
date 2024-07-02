@@ -120,7 +120,10 @@ export function InfoCart() {
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <Button className="mt-4 w-full bg-black text-white py-2 rounded-md" onClick={handleOrder}>Buy Now</Button>
+          <Button className="mt-4 w-full bg-black text-white py-2 rounded-md" 
+           onClick={handleOrder}
+           disabled={total === 0}
+           >Buy Now</Button>
         </div>
       )}
     </div>

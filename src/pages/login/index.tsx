@@ -65,14 +65,14 @@ const Login = () => {
             />
           </div>
           <div className="text-right mt-4">
-            <Link to="/forget-password" className="text-sm font-medium text-gray-600">
+            <Link to="forget-password" className="text-sm font-medium text-gray-600">
               Forgot Password?
             </Link>
           </div>
           <button className="bg-black text-white mt-4 w-full py-2">Login</button>
         </form>
         <div className="mt-4 text-center">
-          <Link to="/register" className="text-sm  font-medium text-gray-600">
+          <Link to="register" className="text-sm  font-medium text-gray-600">
             Don't have an account? Sign up
           </Link>
         </div>

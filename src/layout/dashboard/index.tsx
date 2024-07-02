@@ -1,7 +1,8 @@
 // DashboardLayout.tsx
-import React, { useState } from 'react';
-import { ShoppingBag } from 'lucide-react';
+import { useState } from 'react';
+import { LogOut, ShoppingBag } from 'lucide-react';
 import Chat from './StaffChat/Chat';
+import CustomerManager from './customer';
 
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard' },
@@ -19,7 +20,7 @@ function DashboardLayout() {
 
   return (
     <div className="flex h-screen">
-      <aside className="w-1/4 px-8 bg-white">
+      <aside className="w-1/4 px-8 bg-white ">
         <h1 className="text-2xl font-semibold my-8 text-center">Dashboard</h1>
         {sidebarItems.map(({ icon, title }, index) => (
           <div
@@ -32,8 +33,9 @@ function DashboardLayout() {
           </div>
         ))}
       </aside>
-      <div className="flex-grow p-4">
-        <div>{selected}</div>
+      <div className="flex-grow p-4 bg-[#F5F5F5] px-8">
+        <LogOut className="mt-5 float-right" />
+        {selected === 'Customer' && <CustomerManager />}
       </div>
       <Chat isStaff={true} />
     </div>
