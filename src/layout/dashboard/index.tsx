@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { LogOut, ShoppingBag } from 'lucide-react';
 import Chat from './StaffChat/Chat';
 import CustomerManager from './customer';
+import { useNavigate } from 'react-router-dom';
 
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard' },
@@ -12,12 +13,16 @@ const sidebarItems = [
 ];
 
 function DashboardLayout() {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState('Dashboard');
 
   function handleClickSidebar(title: string) {
     setSelected(title);
   }
-
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/');
+  };
   return (
     <div className="flex h-screen">
       <aside className="w-1/4 px-8 bg-white ">
@@ -34,7 +39,12 @@ function DashboardLayout() {
         ))}
       </aside>
       <div className="flex-grow p-4 bg-[#F5F5F5] px-8">
-        <LogOut className="mt-5 float-right" />
+        <LogOut
+          className="mt-5 float-right"
+          onClick={() => {
+            logout();
+          }}
+        />
         {selected === 'Customer' && <CustomerManager />}
       </div>
       <Chat isStaff={true} />
