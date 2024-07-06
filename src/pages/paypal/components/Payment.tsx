@@ -16,10 +16,16 @@ interface Order {
   voucher_code: string | null;
 }
 
+interface PaymentMethod {
+  method_id: number;
+  method_name: string;
+}
+
 const Payment: React.FC = () => {
   const { order_id } = useParams<{ order_id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   const navigate = useNavigate();
@@ -47,13 +53,23 @@ const Payment: React.FC = () => {
       }
     };
 
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await axios.get<PaymentMethod[]>('http://localhost:5000/api/payment-methods');
+        setPaymentMethods(response.data);
+      } catch (error) {
+        console.error('Error fetching payment methods:', error);
+      }
+    };
+
     fetchOrder();
+    fetchPaymentMethods();
   }, [order_id]);
 
   const handlePayment = async () => {
-    if (paymentMethod === 'cash') {
+    if (paymentMethod === 'Payment on delivery') {
       navigate('/after-payment');
-    } else if (paymentMethod === 'paypal') {
+    } else if (paymentMethod === 'Paypal') {
       try {
         const token = localStorage.getItem('accessToken');
         const response = await axios.post(`http://localhost:5000/api/payment/pay/`, {
@@ -63,12 +79,17 @@ const Payment: React.FC = () => {
         });
 
         if (response.data.approval_url) {
+          // Redirect to PayPal approval URL
           window.location.href = response.data.approval_url;
+        } else {
+          alert('Failed to get PayPal approval URL. Please try again.');
         }
       } catch (error) {
         console.error('Failed to process PayPal payment:', error);
         alert('Failed to process PayPal payment. Please try again.');
       }
+    } else if (paymentMethod === 'Zaypal') {
+      alert('Chưa hỗ trợ thanh toán Zaypal');
     }
   };
 
@@ -101,24 +122,17 @@ const Payment: React.FC = () => {
         <div className="text-green-500">Voucher applied: {order.voucher_code}</div>
       )}
       <div>
-        <label className="mr-5">
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="cash"
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            checked={paymentMethod === 'cash'}
-          /> Pay on Delivery
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="paypal"
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            checked={paymentMethod === 'paypal'}
-          /> PayPal
-        </label>
+        {paymentMethods.map(method => (
+          <label key={method.method_id} className="mr-5">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value={method.method_name}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              checked={paymentMethod === method.method_name}
+            /> {method.method_name}
+          </label>
+        ))}
       </div>
       <button onClick={handlePayment} className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Payment</button>
     </div>

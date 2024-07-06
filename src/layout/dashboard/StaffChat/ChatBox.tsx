@@ -44,29 +44,17 @@ const StaffChatBox: React.FC = () => {
   useEffect(() => {
     fetchUserProfile();
     fetchMessagers();
-  }, []);
 
-  useEffect(() => {
-    if (userId !== null && messagerId !== null) {
-      fetchMessages(messagerId);
-    }
-  }, [userId, messagerId]);
-
-  useEffect(() => {
-    if (messagerId) {
-      socket.emit('join room', `room-${messagerId}`);
-    }
-  }, [messagerId]);
-
-  useEffect(() => {
     socket.on('chat message', (message: Message) => {
-      setMessages((prevMessages) => [message, ...prevMessages]);
+      setMessages(prevMessages => {
+        if (message.messager_id === messagerId) {
+          return [message, ...prevMessages];
+        }
+        return prevMessages;
+      });
     });
 
     return () => {
-      if (messagerId) {
-        socket.emit('leave room', `room-${messagerId}`);
-      }
       socket.off('chat message');
     };
   }, [messagerId]);
@@ -144,6 +132,7 @@ const StaffChatBox: React.FC = () => {
     const messageData = {
       recipient_id: selectedRecipientId,
       message: newMessage,
+      messager_id: messagerId,
     };
 
     try {
@@ -162,8 +151,20 @@ const StaffChatBox: React.FC = () => {
         user: currentUser || { user_id: userId!, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] },
         recipient: { user_id: selectedRecipientId, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] }
       };
-      setMessages((prevMessages) => [messageWithUser, ...prevMessages]);
+
+      // Emit the message to the server
+      socket.emit('chat message', messageWithUser);
+
+      // Update local message state
+      setMessages((prevMessages) => {
+        if (!prevMessages.some(msg => msg.chat_id === messageWithUser.chat_id)) {
+          return [messageWithUser, ...prevMessages];
+        }
+        return prevMessages;
+      });
+
       setNewMessage('');
+
     } catch (error) {
       console.error('Error sending message:', error);
     }

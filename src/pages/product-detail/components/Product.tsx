@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProductDetail } from '@/lib/api/productdetail-api';
+import axios from 'axios';
 import { useCart } from '@/context/CartContext';
+
+interface Review {
+  review_id: number;
+  product_id: number;
+  rating: number;
+  comment: string;
+  user_id: number;
+  full_name?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Product: React.FC<{ productId: number }> = ({ productId }) => {
   const [product, setProduct] = useState({
@@ -15,6 +27,8 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [averageRating, setAverageRating] = useState(0); // New state for average rating
+  const [reviewCount, setReviewCount] = useState(0); // New state for review count
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -29,6 +43,8 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
           price: data.price,
           quantity: 1,
         });
+        // Fetch reviews and calculate the average rating
+        fetchAverageRating(productId);
       } catch (error) {
         console.error('Lỗi khi tải thông tin sản phẩm:', error);
       }
@@ -36,6 +52,22 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
 
     fetchProductDetails();
   }, [productId]);
+
+  const fetchAverageRating = async (productId: number) => {
+    try {
+      const url = `http://localhost:5000/api/reviews/product/${productId}`;
+      const response = await axios.get(url);
+      const reviews: Review[] = response.data;
+      setReviewCount(reviews.length); // Update review count
+      if (reviews.length > 0) {
+        const totalRating = reviews.reduce((sum: number, review: Review) => sum + review.rating, 0);
+        const avgRating = totalRating / reviews.length;
+        setAverageRating(avgRating);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
 
   const handleNextImage = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % product.images.length);
@@ -72,8 +104,8 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   };
 
   return (
-    <div className="flex" style={{ minHeight: '500px' }}>
-      <div className="w-1/2 relative">
+    <div className="flex" style={{ height: 500 }}>
+      <div className="w-1/2 relative border-right border-gray-400">
         {product.images.length > 0 && (
           <div className="h-full flex items-center justify-center">
             <img
@@ -90,10 +122,12 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
         <h1 className="text-2xl font-bold mt-5">{product.name} loại {product.weight} ml</h1>
         <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 my-1 w-fit">
           <i className="fa-solid fa-star text-gray-500"></i>
-          <p className="text-sm text-gray-500 ml-2">Rating: Stars</p>
+          <p className="text-sm text-gray-500 ml-2">
+            Rating: {averageRating.toFixed(1)} Stars ({reviewCount} reviews)
+          </p>
         </div>
         <div className="text-md my-2">Made in: {product.placeOfProduction}</div>
-        <div className="text-lg font-semibold mb-4">Price: ${product.price}</div>
+        <div className="text-lg font-semibold mb-4">Price: {product.price} đ</div>
         <div className="text-md my-2">Quantity:</div>
         <div className="flex items-center rounded-md">
           <button className="bg-gray-100 px-3 py-2 rounded-l-md border border-gray-300" onClick={handleDecrement}>-</button>

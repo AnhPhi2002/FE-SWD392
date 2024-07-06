@@ -3,12 +3,22 @@ import { useState } from 'react';
 import { LogOut, ShoppingBag } from 'lucide-react';
 import Chat from './StaffChat/Chat';
 import CustomerManager from './customer';
+import VoucherManager from './voucher';
+import ArticleManager from './artical';
+import CategoryManager from './category/indext';
+import ProductManager from './Product';
+import ReviewManager from './review';
+import OrderManager from './order';
 
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard' },
   { icon: <ShoppingBag />, title: 'Order' },
   { icon: <ShoppingBag />, title: 'Customer' },
-  { icon: <ShoppingBag />, title: 'Reviews' }
+  { icon: <ShoppingBag />, title: 'Voucher' },
+  { icon: <ShoppingBag />, title: 'Artical' },
+  { icon: <ShoppingBag />, title: 'Categories' },
+  { icon: <ShoppingBag />, title: 'Products' },
+  { icon: <ShoppingBag />, title: 'Reviews' },
 ];
 
 function DashboardLayout() {
@@ -36,6 +46,12 @@ function DashboardLayout() {
       <div className="flex-grow p-4 bg-[#F5F5F5] px-8">
         <LogOut className="mt-5 float-right" />
         {selected === 'Customer' && <CustomerManager />}
+        {selected === 'Voucher' && <VoucherManager />}
+        {selected === 'Artical' && <ArticleManager />}
+        {selected === 'Categories' && <CategoryManager />}
+        {selected === 'Products' && <ProductManager />}
+        {selected === 'Reviews' && <ReviewManager />}
+        {selected === 'Order' && <OrderManager />}
       </div>
       <Chat isStaff={true} />
     </div>

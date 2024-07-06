@@ -82,9 +82,9 @@ export function SheetCart() {
             ))
           )}
         </div>
-        <SheetFooter className="pt-5 mt-auto">
+        <SheetFooter className="pt-5 mt-auto m-auto">
           <SheetClose asChild>
-            <Button onClick={handleCart}>Go to Cart</Button>
+            <Button className='w-[200px]' onClick={handleCart}>Go to Cart</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

@@ -29,7 +29,7 @@ const ChatBox: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [messageId, setMessageId] = useState<number | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
-  const recipientId = 2;
+  const recipientId = 2; // Assuming this is the staff ID
 
   useEffect(() => {
     fetchUserProfile();
@@ -37,6 +37,21 @@ const ChatBox: React.FC = () => {
     if (storedMessageId) {
       setMessageId(Number(storedMessageId));
     }
+
+    // Listen for incoming messages
+    socket.on('chat message', (message: Message) => {
+      setMessages((prevMessages) => {
+        // Check if the message is already in the list to avoid duplicates
+        if (!prevMessages.some(msg => msg.chat_id === message.chat_id)) {
+          return [message, ...prevMessages];
+        }
+        return prevMessages;
+      });
+    });
+
+    return () => {
+      socket.off('chat message');
+    };
   }, []);
 
   useEffect(() => {
@@ -49,18 +64,11 @@ const ChatBox: React.FC = () => {
     if (roomId) {
       socket.emit('join room', roomId);
     }
-  }, [roomId]);
-
-  useEffect(() => {
-    socket.on('chat message', (message: Message) => {
-      setMessages((prevMessages) => [message, ...prevMessages]);
-    });
 
     return () => {
       if (roomId) {
         socket.emit('leave room', roomId);
       }
-      socket.off('chat message');
     };
   }, [roomId]);
 
@@ -139,10 +147,22 @@ const ChatBox: React.FC = () => {
         user: currentUser || { user_id: userId!, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] },
         recipient: { user_id: recipientId, email: '', full_name: 'Unknown User', avatar_url: ['default-avatar-url'] }
       };
-      setMessages((prevMessages) => [messageWithUser, ...prevMessages]);
+
+      // Emit the message to the server
+      socket.emit('chat message', messageWithUser);
+
+      // Update local message state without adding the message twice
+      setMessages((prevMessages) => {
+        if (!prevMessages.some(msg => msg.chat_id === messageWithUser.chat_id)) {
+          return [messageWithUser, ...prevMessages];
+        }
+        return prevMessages;
+      });
+
       setMessageId(data.messager_id);
       localStorage.setItem('messageId', String(data.messager_id));
       setNewMessage('');
+
     } catch (error) {
       console.error('Error sending message:', error);
     }
