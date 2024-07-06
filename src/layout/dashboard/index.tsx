@@ -3,16 +3,13 @@ import { useState } from 'react';
 import { LogOut, ShoppingBag } from 'lucide-react';
 import Chat from './StaffChat/Chat';
 import CustomerManager from './customer';
-<<<<<<< HEAD
 import VoucherManager from './voucher';
 import ArticleManager from './artical';
 import CategoryManager from './category/indext';
 import ProductManager from './Product';
 import ReviewManager from './review';
 import OrderManager from './order';
-=======
-import { useNavigate } from 'react-router-dom';
->>>>>>> e072ecbf5c3ccd3f39bb5f91d9f312edfcca6929
+import { useNavigate } from 'react-router-dom'; 
 
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard' },
