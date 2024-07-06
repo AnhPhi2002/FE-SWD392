@@ -10,7 +10,11 @@ export const loginSchema = z.object({
 export const registerSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
+  full_name: z.string().min(3, { message: 'Full name must be at least 3 characters long' }),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 characters long' })
+});
+export const roleSchema = z.object({
+  role: z.enum(['admin', 'staff', 'user'], { message: 'Role must be either admin or customer' })
 });
 
 export const sendOtp = z.object({

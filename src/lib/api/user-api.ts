@@ -18,5 +18,14 @@ export const userAPI = {
   },
   resetPasswordApi: (data: any, token: string) => {
     return axiosClient.post(`/api/users/reset-password/${token}`, data);
+  },
+  getAllUsersApi: () => {
+    return axiosClient.get('/api/admin/all');
+  },
+  updateRoleApi: (data: any) => {
+    return axiosClient.post('/api/admin/assign-role', data);
+  },
+  deleteUserApi: (id: string) => {
+    return axiosClient.delete(`/api/admin/users/${id}`);
   }
 };

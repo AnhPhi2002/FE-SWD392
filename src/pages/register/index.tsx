@@ -13,6 +13,7 @@ function Register() {
     defaultValues: {
       email: '',
       password: '',
+      full_name: '',
       phone: ''
     }
   });
@@ -54,6 +55,19 @@ function Register() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} className="active:outline-none focus-visible:ring-0" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} className="active:outline-none focus-visible:ring-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
