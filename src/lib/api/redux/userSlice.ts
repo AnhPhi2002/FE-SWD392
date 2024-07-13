@@ -4,11 +4,13 @@ import { RootState } from './store';
 // Define a type for the slice state
 interface UserState {
   listUser: any[]; // Change the type of listUser to any[]
+  currentUser: any
 }
 
 // Define the initial state using that type
 const initialState: UserState = {
-  listUser: []
+  listUser: [],
+  currentUser: {}
 };
 
 export const userSlice = createSlice({
@@ -23,6 +25,9 @@ export const userSlice = createSlice({
       if (action.payload) {
         state.listUser.push(action.payload);
       }
+    },
+    setCurrentUser:(state,action: PayloadAction<any>) => {
+      state.currentUser = action.payload
     },
     updateRole: (state, action: PayloadAction<any>) => {
       const { user_id, role } = action.payload;

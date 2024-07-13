@@ -137,6 +137,7 @@ const Payment: React.FC = () => {
       <button onClick={handlePayment} className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Payment</button>
     </div>
   );
+  
 };
 
 export default Payment;

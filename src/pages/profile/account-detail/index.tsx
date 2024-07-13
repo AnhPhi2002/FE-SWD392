@@ -14,7 +14,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useUploadImage } from '@/hooks/useUploadImage';
 import { useEffect } from 'react';
 import { userAPI } from '@/lib/api/user-api';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { userActions } from '@/lib/api/redux/userSlice';
 const AccountDetail = () => {
+  const dispatch = useAppDispatch()
   const { handleFileInputClick, avatarUrl, setAvatarUrl } = useUploadImage();
   const form = useForm<z.infer<typeof updateAccount>>({
     resolver: zodResolver(updateAccount),
@@ -29,6 +32,7 @@ const AccountDetail = () => {
 
   async function onSubmit(values: z.infer<typeof updateAccount>) {
     const data = { ...values, avatar_url: avatarUrl, birthday: values.birthday.toISOString() };
+    dispatch(userActions.setCurrentUser(data));
     try {
       const resData = await userAPI.updateUserApi(data);
       if (resData.status === 200) {
@@ -41,6 +45,7 @@ const AccountDetail = () => {
   async function getUser() {
     try {
       const resData = await userAPI.getUserApi();
+      dispatch(userActions.setCurrentUser(resData.data));
       if (resData.status === 200) {
         form.setValue('phone', resData.data.phone);
         form.setValue('full_name', resData.data.full_name);
