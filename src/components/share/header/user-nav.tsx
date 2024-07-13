@@ -31,7 +31,7 @@ export default function UserNav() {
   };
   useEffect(() => {
     getUser();
-  }, [])
+  }, []);
   
   return (
     <div className="pl-5">
