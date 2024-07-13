@@ -24,7 +24,7 @@ export function Menu() {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="product-listing">
+          <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/product-listing">
             Product
           </NavigationMenuLink>
         </NavigationMenuItem>

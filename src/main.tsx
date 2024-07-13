@@ -30,6 +30,16 @@ import { Toaster } from 'sonner';
 import Cart from './pages/cart/index.tsx';
 import AfterPayment from './pages/after-payment/index.tsx';
 import PaymentPage from './pages/paypal/index.tsx';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import { Roles } from './lib/roles.ts';
+import CustomerManager from './layout/dashboard/customer/index.tsx';
+import OrderManager from './layout/dashboard/order/index.tsx';
+import DashboardLayoutStaff from './layout/dashboard-staff/index.tsx';
+import ArticleManager from './layout/dashboard-staff/artical/index.tsx';
+import CategoryManager from './layout/dashboard-staff/category/indext.tsx';
+import ProductManager from './layout/dashboard-staff/Product/index.tsx';
+import ReviewManager from './layout/dashboard-staff/review/index.tsx';
+import VoucherManager from './layout/dashboard-staff/voucher/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -99,6 +109,7 @@ const router = createBrowserRouter([
       }
     ]
   },
+
   {
     path: 'auth',
     element: <AuthLayout />,
@@ -118,9 +129,95 @@ const router = createBrowserRouter([
     ]
   },
 
+  // {
+  //   path: '/dashboard',
+  //   element: <DashboardLayout />
+  // },
   {
-    path: '/dashboard',
-    element: <DashboardLayout />
+    path: '/admin',
+    element: (
+      <ProtectedRoute roles={[Roles.Admin]}>
+        <DashboardLayout>
+          <Outlet />
+        </DashboardLayout>
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: '/admin/dashboard',
+        element: <div></div>
+      },
+      {
+        path: '/admin/customer',
+        element: <CustomerManager />
+      },  
+      {
+        path: '/admin/order',
+        element: <OrderManager />
+      },
+      {
+        path: '/admin/voucher',
+        element: <VoucherManager />
+      },    {
+        path: '/admin/artical',
+        element: <ArticleManager />
+      }, 
+        {
+        path: '/admin/categories',
+        element: <CategoryManager />
+      },  
+        {
+        path: '/admin/product',
+        element: <ProductManager />
+      },
+      {
+        path: '/admin/reviews',
+        element: <ReviewManager />
+      }
+    ]
+  },
+  {
+    path: '/staff',
+    element: (
+      <ProtectedRoute roles={[Roles.Staff]}>
+        <DashboardLayoutStaff>
+          <Outlet />
+        </DashboardLayoutStaff>
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: '/staff/dashboard',
+        element: <div></div>
+      },
+      {
+        path: '/staff/customer',
+        element: <CustomerManager />
+      },  
+      {
+        path: '/staff/order',
+        element: <OrderManager />
+      },
+      {
+        path: '/staff/voucher',
+        element: <VoucherManager />
+      },    {
+        path: '/staff/artical',
+        element: <ArticleManager />
+      }, 
+        {
+        path: '/staff/categories',
+        element: <CategoryManager />
+      },  
+        {
+        path: '/staff/product',
+        element: <ProductManager />
+      },
+      {
+        path: '/staff/reviews',
+        element: <ReviewManager />
+      }
+    ]
   }
 ]);
 
