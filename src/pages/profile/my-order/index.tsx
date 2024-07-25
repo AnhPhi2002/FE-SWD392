@@ -19,8 +19,7 @@ const MyOrders = () => {
     try {
       const response = await orderApi.getOrders();
       if (response.status === 200) {
-        const orderData = response.data.filter((orderApi: OrderType) => orderApi.user_id === currentUser?.id);
-        setOrders(orderData);
+        setOrders(response.data);
       }
     } catch (error: any) {
       toast.error(error);
