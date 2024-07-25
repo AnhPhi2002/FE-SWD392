@@ -13,7 +13,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <Chat />
       </div> */}
       <div>{children}</div>
-      <div>  <TawkToChat /> </div>
+      {/* <div>  <TawkToChat /> </div> */}
       <div>
         <Footer />
       </div>
