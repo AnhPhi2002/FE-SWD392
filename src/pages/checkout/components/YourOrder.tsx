@@ -31,6 +31,7 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
   const [voucherCode, setVoucherCode] = useState<string>('');
   const [total, setTotal] = useState<number>(initialTotal);
   const [voucher, setVoucher] = useState<Voucher | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Thêm state cho thông báo lỗi
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,7 +99,7 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
             alert('Một lỗi không mong muốn đã xảy ra. Vui lòng thử lại.');
         }
     }
-};
+  };
 
   const handlePlaceOrder = async () => {
     try {
@@ -122,8 +123,12 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
         navigate(`/payment/${order_id}`);
       }
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorMessage(error.response.data.message || 'There was an error placing your order.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
       console.error('Failed to place order:', error);
-      alert('There was an error placing your order.');
     }
   };
 
@@ -157,6 +162,11 @@ export function YourOrder({ items, total: initialTotal, isFormValid }: YourOrder
         onChange={(e) => setVoucherCode(e.target.value)}
         className="mt-4 w-full border p-2 rounded-md"
       />
+      {errorMessage && (
+        <div className="text-red-500 text-sm mt-2">
+          {errorMessage}
+        </div>
+      )}
       <Button onClick={handleVoucherApply} className="mt-4 w-full bg-black text-white py-2 rounded-md">Apply Voucher</Button>
       <Button onClick={handlePlaceOrder} disabled={!isFormValid} className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md">Place Order</Button>
     </div>

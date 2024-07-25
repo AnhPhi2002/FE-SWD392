@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 type Product = {
   product_id: number;
@@ -70,7 +79,10 @@ const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0); // Scroll to top after pagination change
+  };
 
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
@@ -127,20 +139,30 @@ const ProductList: React.FC<ProductListProps> = ({ selectedCategoryIds }) => {
         ))}
       </div>
       <div className="flex justify-center mt-8">
-        <nav>
-          <ul className="inline-flex -space-x-px">
+        <Pagination>
+          <PaginationContent>
+            {currentPage > 1 && (
+              <PaginationItem>
+                <PaginationPrevious onClick={() => paginate(currentPage - 1)} />
+              </PaginationItem>
+            )}
             {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index + 1}>
-                <button
+              <PaginationItem key={index + 1}>
+                <PaginationLink
                   onClick={() => paginate(index + 1)}
-                  className={`px-3 py-2 ml-0 leading-tight ${currentPage === index + 1 ? 'bg-gray-200 text-gray-800' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-800'}`}
+                  isActive={currentPage === index + 1}
                 >
                   {index + 1}
-                </button>
-              </li>
+                </PaginationLink>
+              </PaginationItem>
             ))}
-          </ul>
-        </nav>
+            {currentPage < totalPages && (
+              <PaginationItem>
+                <PaginationNext onClick={() => paginate(currentPage + 1)} />
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

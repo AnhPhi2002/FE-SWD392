@@ -64,10 +64,10 @@ export function SheetCart() {
           ) : (
             items.map((item) => (
               <div key={item.cartItemId} className="flex  gap-4 p-4 border rounded-md">
-                <img src={item.imageUrl} className="w-20 h-16" alt={item.name} />
+                <img src={item.imageUrl} className="w-[80px] h-[80px] mr-5" alt={item.name} />
                 <div className="flex-grow">
                   <div className="font-semibold">{item.name}</div>
-                  <div className="text-gray-500">{item.size}</div>
+                  <div className="text-gray-500">{item.size}ml</div>
                   <div className="flex items-center mt-2">
                     <Button className="bg-gray-200 text-black-500 hover:bg-gray-400" onClick={() => handleDecrement(item.cartItemId)}>-</Button>
                     <span className="mx-2">{item.quantity}</span>

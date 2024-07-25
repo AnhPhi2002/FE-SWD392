@@ -27,7 +27,7 @@ function CustomerManager() {
     fetchDataTable();
   }, []);
   return (
-    <div className="mt-[10%] bg-white px-6 py-4">
+    <div className="mt-12 bg-white px-6 py-4">
       <DataTable columns={columns} data={dataTable} />
     </div>
   );

@@ -1,9 +1,13 @@
-import React from 'react'
+// BlogPage.tsx
+import React from 'react';
+import PostBlog from './PostBlog';
 
-const BlogPage = () => {
+const BlogPage: React.FC = () => {
   return (
-    <div>BlogPage</div>
-  )
-}
+    <div>
+      <PostBlog />
+    </div>
+  );
+};
 
-export default BlogPage
+export default BlogPage;

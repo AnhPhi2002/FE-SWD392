@@ -1,7 +1,7 @@
 // DashboardLayout.tsx
 import { Children, useState } from 'react';
 import { LogOut, ShoppingBag } from 'lucide-react';
-import Chat from './StaffChat/Chat';
+// import Chat from './StaffChat/Chat';
 import CustomerManager from './customer';
 import VoucherManager from './voucher';
 import ArticleManager from './artical';
@@ -14,11 +14,11 @@ import { Link, useNavigate } from 'react-router-dom';
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard', href: '/staff/dashboard' },
   { icon: <ShoppingBag />, title: 'Order', href: '/staff/order' },
-  // { icon: <ShoppingBag />, title: 'Customer', href: '/staff/customer' },
+  { icon: <ShoppingBag />, title: 'Customer', href: '/staff/customer' },
   { icon: <ShoppingBag />, title: 'Voucher', href: '/staff/voucher' },
-  // { icon: <ShoppingBag />, title: 'Artical', href: '/staff/artical' },
-  // { icon: <ShoppingBag />, title: 'Categories', href: '/staff/categories' },
-  // { icon: <ShoppingBag />, title: 'Products', href: '/staff/product' },
+  { icon: <ShoppingBag />, title: 'Artical', href: '/staff/artical' },
+  { icon: <ShoppingBag />, title: 'Categories', href: '/staff/categories' },
+  { icon: <ShoppingBag />, title: 'Products', href: '/staff/product' },
   { icon: <ShoppingBag />, title: 'Reviews', href: '/staff/reviews' }
 ];
 
@@ -67,7 +67,7 @@ function DashboardLayoutStaff({ children }: any) {
         {selected === 'Order' && <OrderManager />} */}
         {children}
       </div>
-      <Chat isStaff={true} />
+      {/* <Chat isStaff={true} /> */}
     </div>
   );
 }

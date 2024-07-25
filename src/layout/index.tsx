@@ -1,6 +1,7 @@
 import Footer from '@/components/share/footer';
 import Header from '@/components/share/header';
-import Chat from '@/components/share/chat/Chat';
+import TawkToChat from '@/components/TawkToChat';
+// import Chat from '@/components/share/chat/Chat';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,10 +9,11 @@ function Layout({ children }: { children: React.ReactNode }) {
       <div>
         <Header />
       </div>
-      <div>
+      {/* <div>
         <Chat />
-      </div>
+      </div> */}
       <div>{children}</div>
+      <div>  <TawkToChat /> </div>
       <div>
         <Footer />
       </div>

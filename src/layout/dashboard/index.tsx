@@ -1,25 +1,19 @@
 // DashboardLayout.tsx
 import { Children, useState } from 'react';
 import { LogOut, ShoppingBag } from 'lucide-react';
-import Chat from './StaffChat/Chat';
-import CustomerManager from './customer';
-import VoucherManager from './voucher';
-import ArticleManager from './artical';
-import CategoryManager from './category/indext';
-import ProductManager from './Product';
-import ReviewManager from './review';
-import OrderManager from './order';
 import { Link, useNavigate } from 'react-router-dom';
 
 const sidebarItems = [
   { icon: <ShoppingBag />, title: 'Dashboard', href: '/admin/dashboard' },
-  { icon: <ShoppingBag />, title: 'Order', href: '/admin/order' },
+  // { icon: <ShoppingBag />, title: 'Order', href: '/admin/order' },
   { icon: <ShoppingBag />, title: 'Customer', href: '/admin/customer' },
-  { icon: <ShoppingBag />, title: 'Voucher', href: '/admin/voucher' },
-  { icon: <ShoppingBag />, title: 'Artical', href: '/admin/artical' },
-  { icon: <ShoppingBag />, title: 'Categories', href: '/admin/categories' },
-  { icon: <ShoppingBag />, title: 'Products', href: '/admin/product' },
-  { icon: <ShoppingBag />, title: 'Reviews', href: '/admin/reviews' }
+
+  { icon: <ShoppingBag />, title: 'Revenue Statistics', href: '/admin/revenuestatistics' },
+  { icon: <ShoppingBag />, title: 'Product Statistics', href: '/admin/productstatistics' },
+  { icon: <ShoppingBag />, title: 'Order Status Counts', href: '/admin/orderstatuscounts' },
+  { icon: <ShoppingBag />, title: 'Top Selling Product', href: '/admin/topsellingproducts' },
+  { icon: <ShoppingBag />, title: 'Customer Statistics', href: '/admin/customerstatistics' },
+  { icon: <ShoppingBag />, title: 'Revenue By Payment Method', href: '/admin/revenuebypaymentmethod' }
 ];
 
 function DashboardLayout({ children }: any) {
@@ -67,7 +61,7 @@ function DashboardLayout({ children }: any) {
         {selected === 'Order' && <OrderManager />} */}
         {children}
       </div>
-      <Chat isStaff={true} />
+      {/* <Chat isStaff={true} /> */}
     </div>
   );
 }

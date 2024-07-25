@@ -14,10 +14,10 @@ export default function UserNav() {
   const dispatch = useAppDispatch()
   
   const navigate = useNavigate();
-
   const logout = () => {
     localStorage.removeItem('accessToken');
     navigate('/');
+    window.location.reload(); 
   };
 
   const handleAvatarClick = () => {

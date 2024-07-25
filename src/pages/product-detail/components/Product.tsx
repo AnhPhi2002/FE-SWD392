@@ -15,7 +15,14 @@ interface Review {
   updatedAt: string;
 }
 
-const Product: React.FC<{ productId: number }> = ({ productId }) => {
+interface ProductProps {
+  productId: number;
+  averageRating: number;
+  reviewCount: number;
+  updateRatingAndReviews: () => void;
+}
+
+const Product: React.FC<ProductProps> = ({ productId, averageRating, reviewCount, updateRatingAndReviews }) => {
   const [product, setProduct] = useState({
     images: [],
     name: '',
@@ -23,12 +30,12 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
     placeOfProduction: '',
     price: 0,
     quantity: 1,
+    stockQuantity: 0,
+    status: '',
   });
   const [currentIndex, setCurrentIndex] = useState(0);
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const [averageRating, setAverageRating] = useState(0); // New state for average rating
-  const [reviewCount, setReviewCount] = useState(0); // New state for review count
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -42,9 +49,9 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
           placeOfProduction: data.placeOfProduction,
           price: data.price,
           quantity: 1,
+          stockQuantity: data.quantity,
+          status: data.status,
         });
-        // Fetch reviews and calculate the average rating
-        fetchAverageRating(productId);
       } catch (error) {
         console.error('Lỗi khi tải thông tin sản phẩm:', error);
       }
@@ -52,22 +59,6 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
 
     fetchProductDetails();
   }, [productId]);
-
-  const fetchAverageRating = async (productId: number) => {
-    try {
-      const url = `http://localhost:5000/api/reviews/product/${productId}`;
-      const response = await axios.get(url);
-      const reviews: Review[] = response.data;
-      setReviewCount(reviews.length); // Update review count
-      if (reviews.length > 0) {
-        const totalRating = reviews.reduce((sum: number, review: Review) => sum + review.rating, 0);
-        const avgRating = totalRating / reviews.length;
-        setAverageRating(avgRating);
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
 
   const handleNextImage = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % product.images.length);
@@ -104,8 +95,8 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
   };
 
   return (
-    <div className="flex" style={{ height: 500 }}>
-      <div className="w-1/2 relative border-right border-gray-400">
+    <div className="flex flex-col md:flex-row p-10 bg-gray-100">
+      <div className="w-full md:w-1/2 relative flex items-center justify-center border-r border-gray-400">
         {product.images.length > 0 && (
           <div className="h-full flex items-center justify-center">
             <img
@@ -113,29 +104,31 @@ const Product: React.FC<{ productId: number }> = ({ productId }) => {
               alt="Product Image"
               className="max-h-full max-w-full"
             />
-            <button onClick={handlePrevImage} className="absolute left-2 top-1/2 bg-gray-400 text-white p-2 rounded-[10px]">❮</button>
-            <button onClick={handleNextImage} className="absolute right-2 top-1/2 bg-gray-400 text-white p-2 rounded-[10px]">❯</button>
+            <button onClick={handlePrevImage} className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-400 text-white p-2 rounded-full">❮</button>
+            <button onClick={handleNextImage} className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-400 text-white p-2 rounded-full">❯</button>
           </div>
         )}
       </div>
-      <div className="w-1/2 pl-14 bg-gray-100 flex flex-col space-y-6">
-        <h1 className="text-2xl font-bold mt-5">{product.name} loại {product.weight} ml</h1>
-        <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 my-1 w-fit">
+      <div className="w-full md:w-1/2 pl-0 md:pl-14 bg-gray-100 flex flex-col space-y-6 mt-10 md:mt-0">
+        <h1 className="text-3xl font-bold">{product.name} loại {product.weight} ml</h1>
+        <div className="flex items-center bg-gray-200 rounded-full px-3 py-1 my-1 w-fit">
           <i className="fa-solid fa-star text-gray-500"></i>
           <p className="text-sm text-gray-500 ml-2">
             Rating: {averageRating.toFixed(1)} Stars ({reviewCount} reviews)
           </p>
         </div>
         <div className="text-md my-2">Made in: {product.placeOfProduction}</div>
-        <div className="text-lg font-semibold mb-4">Price: {product.price} đ</div>
+        <div className="text-lg font-semibold mb-4 text-green-600">Price: {product.price} $</div>
+        <div className="text-md my-2">Status: {product.status === 'available' ? 'In Stock' : 'Out of Stock'}</div>
+        <div className="text-md my-2">Stock Quantity: {product.stockQuantity}</div>
         <div className="text-md my-2">Quantity:</div>
-        <div className="flex items-center rounded-md">
-          <button className="bg-gray-100 px-3 py-2 rounded-l-md border border-gray-300" onClick={handleDecrement}>-</button>
+        <div className="flex items-center rounded-md space-x-2">
+          <button className="bg-gray-300 px-3 py-2 rounded-md" onClick={handleDecrement}>-</button>
           <input type="text" value={product.quantity} className="w-12 text-center border-t border-b border-gray-300 h-10" readOnly />
-          <button className="bg-gray-100 px-3 py-2 rounded-r-md border border-gray-300" onClick={handleIncrement}>+</button>
+          <button className="bg-gray-300 px-3 py-2 rounded-md" onClick={handleIncrement}>+</button>
         </div>
         <button 
-          className="bg-gray-700 text-white rounded-md px-20 py-4 mt-4 w-[282px] mx-auto mb-8 active:animate-click-animation"
+          className="bg-gray-700 text-white rounded-md px-10 py-3 mt-4 w-full md:w-auto"
           onClick={handleAddToCart}
         >
           Add to Cart

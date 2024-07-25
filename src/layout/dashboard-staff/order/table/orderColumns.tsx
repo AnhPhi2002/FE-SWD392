@@ -54,7 +54,7 @@ export const columns: ColumnDef<Order>[] = [
 
 export async function fetchData(): Promise<Order[]> {
   const token = localStorage.getItem('accessToken');
-  const response = await fetch('http://localhost:5000/api/orders', {
+  const response = await fetch('http://localhost:5000/api/admin/all', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

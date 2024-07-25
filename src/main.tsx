@@ -40,13 +40,24 @@ import CategoryManager from './layout/dashboard-staff/category/indext.tsx';
 import ProductManager from './layout/dashboard-staff/Product/index.tsx';
 import ReviewManager from './layout/dashboard-staff/review/index.tsx';
 import VoucherManager from './layout/dashboard-staff/voucher/index.tsx';
+import TawkToChat from './components/TawkToChat.tsx';
+import BlogDetail from './pages/blog-detail/index.tsx';
+import RevenueStatistics from './layout/dashboard/revenue-statistics/index.tsx';
+import ProductStatisticsPage from './layout/dashboard/product-statistics/index.tsx';
+import OrderStatusCountsPage from './layout/dashboard/order-status-counts/index.tsx';
+import TopSellingProductsPage from './layout/dashboard/top-selling-products/index.tsx';
+import CustomerStatisticsPage from './layout/dashboard/customer-statistics/index.tsx';
+import RevenueByPaymentMethodPage from './layout/dashboard/revenue-by-payment-method/index.tsx';
+import DashboardMain from './layout/dashboard/dashboard-main/index.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <Layout>
+        
         <Outlet />
+  
       </Layout>
     ),
     errorElement: (
@@ -106,6 +117,10 @@ const router = createBrowserRouter([
       {
         path: 'blog',
         element: <BlogPage />
+      },
+      {
+        path: 'blog-detail/:blogId',
+        element: <BlogDetail />
       }
     ]
   },
@@ -145,34 +160,58 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin/dashboard',
-        element: <div></div>
+        element: <DashboardMain />
       },
       {
         path: '/admin/customer',
         element: <CustomerManager />
       },  
+      // {
+      //   path: '/admin/order',
+      //   element: <OrderManager />
+      // },
+      // {
+      //   path: '/admin/voucher',
+      //   element: <VoucherManager />
+      // },    {
+      //   path: '/admin/artical',
+      //   element: <ArticleManager />
+      // }, 
+      //   {
+      //   path: '/admin/categories',
+      //   element: <CategoryManager />
+      // },  
+      //   {
+      //   path: '/admin/product',
+      //   element: <ProductManager />
+      // },
+      // {
+      //   path: '/admin/reviews',
+      //   element: <ReviewManager />
+      // },
       {
-        path: '/admin/order',
-        element: <OrderManager />
+        path: '/admin/revenuestatistics',
+        element: <RevenueStatistics/>
       },
       {
-        path: '/admin/voucher',
-        element: <VoucherManager />
-      },    {
-        path: '/admin/artical',
-        element: <ArticleManager />
-      }, 
-        {
-        path: '/admin/categories',
-        element: <CategoryManager />
-      },  
-        {
-        path: '/admin/product',
-        element: <ProductManager />
+        path: '/admin/productstatistics',
+        element: <ProductStatisticsPage/>
       },
       {
-        path: '/admin/reviews',
-        element: <ReviewManager />
+        path: '/admin/orderstatuscounts',
+        element: <OrderStatusCountsPage/>
+      },
+      {
+        path: '/admin/topsellingproducts',
+        element: <TopSellingProductsPage/>
+      },
+      {
+        path: '/admin/customerstatistics',
+        element: <CustomerStatisticsPage/>
+      },
+      {
+        path: '/admin/revenuebypaymentmethod',
+        element: <RevenueByPaymentMethodPage/>
       }
     ]
   },
@@ -188,7 +227,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/staff/dashboard',
-        element: <div></div>
+        element: <DashboardMain />
       },
       {
         path: '/staff/customer',

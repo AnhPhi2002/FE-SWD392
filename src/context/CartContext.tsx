@@ -23,6 +23,7 @@ interface CartContextProps {
   updateQuantity: (cartItemId: number, quantity: number) => void;
   removeFromCart: (cartItemId: number) => void;
   fetchCart: () => void;
+  clearCart: ()=> void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -85,6 +86,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const clearCart = () => {
+    setItems([]); // Set the cart items to an empty array
+    setTotal(0); // Reset the total to 0
+  };
+  
+
   const removeFromCart = async (cartItemId: number) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -97,12 +104,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+
   return (
-    <CartContext.Provider value={{ items, total, addToCart, updateQuantity, removeFromCart, fetchCart }}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={{ items, total, addToCart, updateQuantity, removeFromCart, fetchCart, clearCart }}>
+  {children}
+</CartContext.Provider>
   );
 };
+
 
 export const useCart = () => {
   const context = useContext(CartContext);

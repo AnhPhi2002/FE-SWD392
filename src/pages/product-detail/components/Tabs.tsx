@@ -13,7 +13,12 @@ interface Review {
   updatedAt: string;
 }
 
-const Tabs: React.FC<{ productId: number }> = ({ productId }) => {
+interface TabsProps {
+  productId: number;
+  updateRatingAndReviews: () => void;
+}
+
+const Tabs: React.FC<TabsProps> = ({ productId, updateRatingAndReviews }) => {
   const [activeTab, setActiveTab] = useState('detail');
   const [showModal, setShowModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -125,9 +130,13 @@ const Tabs: React.FC<{ productId: number }> = ({ productId }) => {
         { ...response.data, full_name: currentUser?.full_name || 'You' }
       ]);
 
+      // Update rating and review count in Product component
+      updateRatingAndReviews();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Error submitting review:', error.message);
+        window.alert("You must login before review");
+        window.location.href = "/auth";
       } else {
         console.error('Unexpected error:', error);
       }
@@ -143,6 +152,7 @@ const Tabs: React.FC<{ productId: number }> = ({ productId }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReviews(prevReviews => prevReviews.filter(review => review.review_id !== reviewId));
+      updateRatingAndReviews();
     } catch (error) {
       console.error('Error deleting review:', error);
     }
@@ -175,6 +185,8 @@ const Tabs: React.FC<{ productId: number }> = ({ productId }) => {
         )
       );
 
+      // Update rating and review count in Product component
+      updateRatingAndReviews();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Error updating review:', error.message);

@@ -8,6 +8,6 @@ import { axiosClient } from './config/axios-client';
 // }
 
 export const orderApi = {
-  getOrders: () => axiosClient.get('/api/orders'),
+  getOrders: () => axiosClient.get('/api/orders/user-order'),
   // createOrder: (orderData: OrderData) => axiosClient.post('/api/orders', orderData),
 };

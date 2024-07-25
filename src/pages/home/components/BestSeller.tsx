@@ -54,7 +54,7 @@ const BestSelling: React.FC = () => {
           <div key={product.product_id} className="group relative">
             <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden lg:h-80 lg:aspect-none">
               <Link to={`/product-detail/${product.product_id}`}>
-                <img src={product.image_url[0]} alt={product.product_name} className="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+                <img src={product.image_url[0]} alt={product.product_name} className="w-full h-full object-contain lg:w-full lg:h-full" />
               </Link>
             </div>
             <div className="mt-4">
